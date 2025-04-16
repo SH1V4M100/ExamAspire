@@ -1,17 +1,50 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { questions } from './data/questions';
 import { Answer, ExamResult } from './types';
 import Timer from './components/Timer';
 
 function App() {
-  const [userName, setUserName] = useState('');
-  const [hasStarted, setHasStarted] = useState(false);
-  const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [questionInput, setQuestionInput] = useState('1');
-  const [answers, setAnswers] = useState<Answer[]>([]);
-  const [timeLeft, setTimeLeft] = useState(300); // 5 minutes
+  const [userName, setUserName] = useState(() => localStorage.getItem('userName') || '');
+  const [hasStarted, setHasStarted] = useState(() => localStorage.getItem('hasStarted') === 'true');
+  const [currentQuestion, setCurrentQuestion] = useState(() => {
+    const saved = localStorage.getItem('currentQuestion');
+    return saved ? Number(saved) : 0;
+  });
+  const [questionInput, setQuestionInput] = useState(() => {
+    const saved = localStorage.getItem('currentQuestion');
+    return saved ? (Number(saved) + 1).toString() : '1';
+  });
+  const [answers, setAnswers] = useState<Answer[]>(() => {
+    const saved = localStorage.getItem('answers');
+    return saved ? JSON.parse(saved) : [];
+  });
+  const [timeLeft, setTimeLeft] = useState(() => {
+    const saved = localStorage.getItem('timeLeft');
+    return saved ? Number(saved) : 300;
+  });
   const [examCompleted, setExamCompleted] = useState(false);
   const [result, setResult] = useState<ExamResult | null>(null);
+
+  // Persist state to localStorage
+  useEffect(() => {
+    localStorage.setItem('userName', userName);
+  }, [userName]);
+
+  useEffect(() => {
+    localStorage.setItem('hasStarted', hasStarted.toString());
+  }, [hasStarted]);
+
+  useEffect(() => {
+    localStorage.setItem('currentQuestion', currentQuestion.toString());
+  }, [currentQuestion]);
+
+  useEffect(() => {
+    localStorage.setItem('answers', JSON.stringify(answers));
+  }, [answers]);
+
+  useEffect(() => {
+    localStorage.setItem('timeLeft', timeLeft.toString());
+  }, [timeLeft]);
 
   const startExam = () => {
     if (userName.trim()) {
@@ -59,6 +92,13 @@ function App() {
       totalQuestions: questions.length,
       timeSpent,
     };
+
+    // Clear persisted data
+    localStorage.removeItem('userName');
+    localStorage.removeItem('hasStarted');
+    localStorage.removeItem('currentQuestion');
+    localStorage.removeItem('answers');
+    localStorage.removeItem('timeLeft');
 
     setResult(examResult);
     setExamCompleted(true);
