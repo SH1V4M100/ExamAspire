@@ -7,6 +7,7 @@ function App() {
   const [userName, setUserName] = useState('');
   const [hasStarted, setHasStarted] = useState(false);
   const [currentQuestion, setCurrentQuestion] = useState(0);
+  const [questionInput, setQuestionInput] = useState('1');
   const [answers, setAnswers] = useState<Answer[]>([]);
   const [timeLeft, setTimeLeft] = useState(300); // 5 minutes
   const [examCompleted, setExamCompleted] = useState(false);
@@ -26,7 +27,7 @@ function App() {
     const newAnswer: Answer = {
       questionId: questions[currentQuestion].id,
       selectedOption: optionIndex,
-      isCorrect: optionIndex === questions[currentQuestion].correctAnswer
+      isCorrect: optionIndex === questions[currentQuestion].correctAnswer,
     };
 
     setAnswers((prev) => {
@@ -56,7 +57,7 @@ function App() {
       answers,
       score,
       totalQuestions: questions.length,
-      timeSpent
+      timeSpent,
     };
 
     setResult(examResult);
@@ -66,6 +67,7 @@ function App() {
   const navigateToQuestion = (questionNumber: number) => {
     if (questionNumber >= 1 && questionNumber <= questions.length) {
       setCurrentQuestion(questionNumber - 1);
+      setQuestionInput(questionNumber.toString());
     }
   };
 
@@ -101,9 +103,15 @@ function App() {
         <div className="max-w-2xl mx-auto bg-white rounded-lg shadow-md p-8">
           <h1 className="text-3xl font-bold mb-6">Exam Results</h1>
           <div className="space-y-4">
-            <p className="text-xl">Name: <strong>{result.userName}</strong></p>
-            <p className="text-xl">Final Score: <strong>{result.score}</strong></p>
-            <p className="text-xl">Time Spent: <strong>{result.timeSpent} seconds</strong></p>
+            <p className="text-xl">
+              Name: <strong>{result.userName}</strong>
+            </p>
+            <p className="text-xl">
+              Final Score: <strong>{result.score}</strong>
+            </p>
+            <p className="text-xl">
+              Time Spent: <strong>{result.timeSpent} seconds</strong>
+            </p>
           </div>
         </div>
       </div>
@@ -111,7 +119,7 @@ function App() {
   }
 
   const question = questions[currentQuestion];
-  const selected = answers.find(a => a.questionId === question.id)?.selectedOption;
+  const selected = answers.find((a) => a.questionId === question.id)?.selectedOption;
 
   return (
     <div className="min-h-screen bg-gray-100 p-8">
@@ -119,11 +127,7 @@ function App() {
         <div className="bg-white rounded-lg shadow-md p-8">
           <div className="flex justify-between items-center mb-8">
             <h1 className="text-2xl font-bold">MCQ Examination</h1>
-            <Timer
-              timeLeft={timeLeft}
-              setTimeLeft={setTimeLeft}
-              onTimeUp={finishExam}
-            />
+            <Timer timeLeft={timeLeft} setTimeLeft={setTimeLeft} onTimeUp={finishExam} />
           </div>
 
           <div className="mb-8">
@@ -133,22 +137,27 @@ function App() {
               </p>
               <div className="flex items-center gap-2">
                 <input
-                  type="number"
-                  min="1"
-                  max={questions.length}
-                  value={currentQuestion + 1}
-                  onChange={(e) => navigateToQuestion(parseInt(e.target.value))}
+                  type="text"
+                  value={questionInput}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    setQuestionInput(value);
+                    const parsed = parseInt(value, 10);
+                    if (!isNaN(parsed)) {
+                      navigateToQuestion(parsed);
+                    }
+                  }}
                   className="w-16 p-2 border border-gray-300 rounded"
                 />
                 <span className="text-gray-600">/ {questions.length}</span>
               </div>
             </div>
-            
+
             {question.type === 'image' ? (
               <div className="mb-6">
-                <img 
-                  src={question.content} 
-                  alt="Question" 
+                <img
+                  src={question.content}
+                  alt="Question"
                   className="w-full h-64 object-cover rounded-lg mb-4"
                 />
                 <p className="text-lg font-medium">What does this image show?</p>
@@ -158,7 +167,7 @@ function App() {
             )}
 
             <div className="space-y-3">
-            {question.options.map((option: string, index: number)  => (
+              {question.options.map((option: string, index: number) => (
                 <button
                   key={index}
                   onClick={() => handleAnswer(index)}
@@ -177,7 +186,7 @@ function App() {
           <div className="flex justify-between mt-8">
             <button
               disabled={currentQuestion === 0}
-              onClick={() => setCurrentQuestion((prev) => prev - 1)}
+              onClick={() => navigateToQuestion(currentQuestion)}
               className="px-4 py-2 bg-gray-300 text-gray-800 rounded disabled:opacity-50"
             >
               Previous
@@ -190,7 +199,7 @@ function App() {
             </button>
             <button
               disabled={currentQuestion === questions.length - 1}
-              onClick={() => setCurrentQuestion((prev) => prev + 1)}
+              onClick={() => navigateToQuestion(currentQuestion + 2)}
               className="px-4 py-2 bg-gray-300 text-gray-800 rounded disabled:opacity-50"
             >
               Next
