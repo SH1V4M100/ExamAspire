@@ -1,3 +1,4 @@
+import { Question } from "../types";
 export const questions: Question[] = [
   {
     id: 1,
