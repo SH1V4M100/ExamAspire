@@ -1,6 +1,4 @@
 import { useState, useCallback } from 'react';
-import { Download } from 'lucide-react';
-import * as XLSX from 'xlsx';
 import { questions } from './data/questions';
 import { Answer, ExamResult } from './types';
 import Timer from './components/Timer';
@@ -63,41 +61,12 @@ function App() {
 
     setResult(examResult);
     setExamCompleted(true);
-
-    // Optional: send result to backend here
   }, [answers, timeLeft, userName]);
 
-  const exportToExcel = () => {
-    if (!result) return;
-
-    const worksheet = XLSX.utils.json_to_sheet(
-      result.answers.map((answer, index) => ({
-        'Question Number': index + 1,
-        'Question': questions[index].text,
-        'Selected Option':
-          answer.selectedOption !== null
-            ? questions[index].options[answer.selectedOption]
-            : 'Not answered',
-        'Correct Answer':
-          questions[index].options[questions[index].correctAnswer],
-        'Is Correct': answer.isCorrect ? 'Yes' : 'No'
-      }))
-    );
-
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, 'Exam Results');
-
-    const summaryData = [
-      { Summary: 'Value' },
-      { Name: result.userName },
-      { 'Total Score': result.score },
-      { 'Total Questions': result.totalQuestions },
-      { 'Time Spent (seconds)': result.timeSpent }
-    ];
-    const summarySheet = XLSX.utils.json_to_sheet(summaryData);
-    XLSX.utils.book_append_sheet(workbook, summarySheet, 'Summary');
-
-    XLSX.writeFile(workbook, `${result.userName}_exam-results.xlsx`);
+  const navigateToQuestion = (questionNumber: number) => {
+    if (questionNumber >= 1 && questionNumber <= questions.length) {
+      setCurrentQuestion(questionNumber - 1);
+    }
   };
 
   // Step 1: Enter name
@@ -135,13 +104,6 @@ function App() {
             <p className="text-xl">Name: <strong>{result.userName}</strong></p>
             <p className="text-xl">Final Score: <strong>{result.score}</strong></p>
             <p className="text-xl">Time Spent: <strong>{result.timeSpent} seconds</strong></p>
-            <button
-              onClick={exportToExcel}
-              className="flex items-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors"
-            >
-              <Download className="w-5 h-5" />
-              Export Results
-            </button>
           </div>
         </div>
       </div>
@@ -165,13 +127,38 @@ function App() {
           </div>
 
           <div className="mb-8">
-            <p className="text-sm text-gray-600 mb-2">
-              Question {currentQuestion + 1} of {questions.length}
-            </p>
-            <h2 className="text-xl font-semibold mb-4">{question.text}</h2>
+            <div className="flex items-center justify-between mb-4">
+              <p className="text-sm text-gray-600">
+                Question {currentQuestion + 1} of {questions.length}
+              </p>
+              <div className="flex items-center gap-2">
+                <input
+                  type="number"
+                  min="1"
+                  max={questions.length}
+                  value={currentQuestion + 1}
+                  onChange={(e) => navigateToQuestion(parseInt(e.target.value))}
+                  className="w-16 p-2 border border-gray-300 rounded"
+                />
+                <span className="text-gray-600">/ {questions.length}</span>
+              </div>
+            </div>
+            
+            {question.type === 'image' ? (
+              <div className="mb-6">
+                <img 
+                  src={question.content} 
+                  alt="Question" 
+                  className="w-full h-64 object-cover rounded-lg mb-4"
+                />
+                <p className="text-lg font-medium">What does this image show?</p>
+              </div>
+            ) : (
+              <h2 className="text-xl font-semibold mb-4">{question.content}</h2>
+            )}
 
             <div className="space-y-3">
-              {question.options.map((option, index) => (
+            {question.options.map((option: string, index: number)  => (
                 <button
                   key={index}
                   onClick={() => handleAnswer(index)}
@@ -196,17 +183,17 @@ function App() {
               Previous
             </button>
             <button
+              onClick={finishExam}
+              className="px-6 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+            >
+              Submit Exam
+            </button>
+            <button
               disabled={currentQuestion === questions.length - 1}
               onClick={() => setCurrentQuestion((prev) => prev + 1)}
               className="px-4 py-2 bg-gray-300 text-gray-800 rounded disabled:opacity-50"
             >
               Next
-            </button>
-            <button
-              onClick={finishExam}
-              className="px-6 py-2 bg-green-600 text-white rounded hover:bg-green-700"
-            >
-              Submit Exam
             </button>
           </div>
 

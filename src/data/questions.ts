@@ -1,34 +1,33 @@
-import { Question } from '../types';
-
 export const questions: Question[] = [
   {
     id: 1,
-    text: "What is the capital of France?",
-    options: ["London", "Berlin", "Paris", "Madrid"],
-    correctAnswer: 2
+    type: 'image',
+    content: 'https://images.unsplash.com/photo-1461988320302-91bde64fc8e4?w=800&auto=format&fit=crop',
+    options: [
+      'This is a spiral galaxy',
+      'This is a nebula',
+      'This is a star cluster',
+      'This is a black hole'
+    ],
+    correctAnswer: 0
   },
   {
     id: 2,
-    text: "Which planet is known as the Red Planet?",
-    options: ["Venus", "Mars", "Jupiter", "Saturn"],
-    correctAnswer: 1
-  },
-  {
-    id: 3,
-    text: "What is the chemical symbol for gold?",
-    options: ["Ag", "Fe", "Cu", "Au"],
+    type: 'image',
+    content: 'https://images.unsplash.com/photo-1614642264762-d0a3b8bf3700?w=800&auto=format&fit=crop',
+    options: [
+      'Cumulus clouds',
+      'Stratus clouds',
+      'Nimbus clouds',
+      'Cirrus clouds'
+    ],
     correctAnswer: 3
   },
   {
-    id: 4,
-    text: "Who painted the Mona Lisa?",
-    options: ["Van Gogh", "Da Vinci", "Picasso", "Rembrandt"],
-    correctAnswer: 1
-  },
-  {
-    id: 5,
-    text: "What is the largest mammal in the world?",
-    options: ["African Elephant", "Blue Whale", "Giraffe", "Hippopotamus"],
-    correctAnswer: 1
+    id: 3,
+    type: 'text',
+    content: 'What is the capital of France?',
+    options: ['London', 'Berlin', 'Paris', 'Madrid'],
+    correctAnswer: 2
   }
 ];
