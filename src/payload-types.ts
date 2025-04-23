@@ -462,7 +462,6 @@ export interface Exam {
   /**
    * Only published exams are visible to students
    */
-  numberOfQuestions?: number;
   _status: 'draft' | 'published';
   slug?: string | null;
   slugLock?: boolean | null;
@@ -593,7 +592,7 @@ export interface Attempt {
   completedAt?: string | null;
   responses?:
     | {
-        question: string | Question;
+        question: number | Question;
         selectedOptions?:
           | {
               optionIndex: number;

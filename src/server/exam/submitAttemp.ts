@@ -7,7 +7,7 @@ interface SubmitAttemptParams {
   examId: number;
   userId: number;
   responses: Array<{
-    questionId: string;
+    questionId: number;
     selectedOptionIndices: number[];
   }>;
   startedAt: string;
