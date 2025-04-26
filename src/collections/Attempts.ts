@@ -31,7 +31,7 @@ export const Attempts: CollectionConfig = {
     read: attemptAccess,
     create: authenticated,
     update: attemptAccess,
-    delete: authenticated, // Attempts should never be deleted
+    delete: authenticated
   },
   fields: [
     {
