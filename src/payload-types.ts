@@ -386,6 +386,7 @@ export interface Category {
 export interface User {
   id: number;
   name?: string | null;
+  'school/university'?: string | null;
   role: 'admin' | 'student' | 'teacher';
   completedExams?: (number | Exam)[] | null;
   examResults?: (number | Result)[] | null;
@@ -1520,6 +1521,7 @@ export interface CategoriesSelect<T extends boolean = true> {
  */
 export interface UsersSelect<T extends boolean = true> {
   name?: T;
+  'school/university'?: T;
   role?: T;
   completedExams?: T;
   examResults?: T;

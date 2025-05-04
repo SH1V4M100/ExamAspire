@@ -12,7 +12,7 @@ export default function Home() {
           <div className="flex items-center space-x-2">
             <GraduationCap className="h-6 w-6" />
             <span className="hidden font-bold sm:inline-block">
-              ExamPro
+              ExamAspire
             </span>
           </div>
           <div className="flex flex-1 items-center justify-end space-x-4">
@@ -38,7 +38,7 @@ export default function Home() {
               </div>
               <div className="space-x-4">
                 <Link href="/signup">
-                  <Button size="lg" className="px-8">Sign In Now</Button>
+                  <Button size="lg" className="px-8">Sign Up Now</Button>
                 </Link>
               </div>
             </div>
