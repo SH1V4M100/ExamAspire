@@ -13,6 +13,7 @@ import { Media } from './collections/Media'
 import { Pages } from './collections/Pages'
 import { Posts } from './collections/Posts'
 import { Users } from './collections/Users'
+import { Admin } from './collections/Admin'
 import { Subjects } from './collections/Subjects'
 import { Topics } from './collections/Topics'
 import { Questions } from './collections/Questions'
@@ -38,7 +39,7 @@ export default buildConfig({
     importMap: {
       baseDir: path.resolve(dirname),
     },
-    user: Users.slug,
+    user: Admin.slug,
     livePreview: {
       breakpoints: [
         {
@@ -69,7 +70,7 @@ export default buildConfig({
       connectionString: process.env.DATABASE_URI || '',
     },
   }),
-  collections: [Pages, Posts, Media, Categories, Users, Subjects, Topics, Questions, Exams, Attempts, Results],
+  collections: [Pages, Posts, Media, Categories, Users, Admin, Subjects, Topics, Questions, Exams, Attempts, Results],
   cors: [getServerSideURL()].filter(Boolean),
   globals: [Header, Footer],
   plugins: [

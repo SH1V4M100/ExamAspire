@@ -29,19 +29,8 @@ export const Users: CollectionConfig = {
       type: 'text',
     },
     {
-      name: 'school/university',
+      name: 'institution',
       type: 'text'
-    },
-    {
-      name: 'role',
-      type: 'select',
-      options: [
-        { label: 'Admin', value: 'admin' },
-        { label: 'Student', value: 'student' },
-        { label: 'Teacher', value: 'teacher' },
-      ],
-      defaultValue: 'student',
-      required: true,
     },
     {
       name: 'completedExams',

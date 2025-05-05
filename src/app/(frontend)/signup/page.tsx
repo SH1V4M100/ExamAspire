@@ -26,8 +26,7 @@ export default function SignUpPage() {
       email: formData.get('email'),
       password: formData.get('password'),
       name: `${formData.get('firstName')} ${formData.get('lastName')}`,
-      role: 'student',
-      university: 'Jadavpur University'
+      institution: 'Jadavpur University'
     };
 
     try {

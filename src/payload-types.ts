@@ -64,6 +64,7 @@ export type SupportedTimezones =
 export interface Config {
   auth: {
     users: UserAuthOperations;
+    admin: AdminAuthOperations;
   };
   blocks: {};
   collections: {
@@ -72,6 +73,7 @@ export interface Config {
     media: Media;
     categories: Category;
     users: User;
+    admin: Admin;
     subjects: Subject;
     topics: Topic;
     questions: Question;
@@ -94,6 +96,7 @@ export interface Config {
     media: MediaSelect<false> | MediaSelect<true>;
     categories: CategoriesSelect<false> | CategoriesSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
+    admin: AdminSelect<false> | AdminSelect<true>;
     subjects: SubjectsSelect<false> | SubjectsSelect<true>;
     topics: TopicsSelect<false> | TopicsSelect<true>;
     questions: QuestionsSelect<false> | QuestionsSelect<true>;
@@ -121,9 +124,13 @@ export interface Config {
     footer: FooterSelect<false> | FooterSelect<true>;
   };
   locale: null;
-  user: User & {
-    collection: 'users';
-  };
+  user:
+    | (User & {
+        collection: 'users';
+      })
+    | (Admin & {
+        collection: 'admin';
+      });
   jobs: {
     tasks: {
       schedulePublish: TaskSchedulePublish;
@@ -136,6 +143,24 @@ export interface Config {
   };
 }
 export interface UserAuthOperations {
+  forgotPassword: {
+    email: string;
+    password: string;
+  };
+  login: {
+    email: string;
+    password: string;
+  };
+  registerFirstUser: {
+    email: string;
+    password: string;
+  };
+  unlock: {
+    email: string;
+    password: string;
+  };
+}
+export interface AdminAuthOperations {
   forgotPassword: {
     email: string;
     password: string;
@@ -386,8 +411,7 @@ export interface Category {
 export interface User {
   id: number;
   name?: string | null;
-  'school/university'?: string | null;
-  role: 'admin' | 'student' | 'teacher';
+  institution?: string | null;
   completedExams?: (number | Exam)[] | null;
   examResults?: (number | Result)[] | null;
   overallPerformance?:
@@ -960,6 +984,27 @@ export interface Form {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "admin".
+ */
+export interface Admin {
+  id: number;
+  name?: string | null;
+  department?: string | null;
+  year?: number | null;
+  role?: string | null;
+  updatedAt: string;
+  createdAt: string;
+  email: string;
+  resetPasswordToken?: string | null;
+  resetPasswordExpiration?: string | null;
+  salt?: string | null;
+  hash?: string | null;
+  loginAttempts?: number | null;
+  lockUntil?: string | null;
+  password?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "redirects".
  */
 export interface Redirect {
@@ -1151,6 +1196,10 @@ export interface PayloadLockedDocument {
         value: number | User;
       } | null)
     | ({
+        relationTo: 'admin';
+        value: number | Admin;
+      } | null)
+    | ({
         relationTo: 'subjects';
         value: number | Subject;
       } | null)
@@ -1195,10 +1244,15 @@ export interface PayloadLockedDocument {
         value: number | PayloadJob;
       } | null);
   globalSlug?: string | null;
-  user: {
-    relationTo: 'users';
-    value: number | User;
-  };
+  user:
+    | {
+        relationTo: 'users';
+        value: number | User;
+      }
+    | {
+        relationTo: 'admin';
+        value: number | Admin;
+      };
   updatedAt: string;
   createdAt: string;
 }
@@ -1208,10 +1262,15 @@ export interface PayloadLockedDocument {
  */
 export interface PayloadPreference {
   id: number;
-  user: {
-    relationTo: 'users';
-    value: number | User;
-  };
+  user:
+    | {
+        relationTo: 'users';
+        value: number | User;
+      }
+    | {
+        relationTo: 'admin';
+        value: number | Admin;
+      };
   key?: string | null;
   value?:
     | {
@@ -1521,8 +1580,7 @@ export interface CategoriesSelect<T extends boolean = true> {
  */
 export interface UsersSelect<T extends boolean = true> {
   name?: T;
-  'school/university'?: T;
-  role?: T;
+  institution?: T;
   completedExams?: T;
   examResults?: T;
   overallPerformance?:
@@ -1535,6 +1593,25 @@ export interface UsersSelect<T extends boolean = true> {
         lastExamDate?: T;
         id?: T;
       };
+  updatedAt?: T;
+  createdAt?: T;
+  email?: T;
+  resetPasswordToken?: T;
+  resetPasswordExpiration?: T;
+  salt?: T;
+  hash?: T;
+  loginAttempts?: T;
+  lockUntil?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "admin_select".
+ */
+export interface AdminSelect<T extends boolean = true> {
+  name?: T;
+  department?: T;
+  year?: T;
+  role?: T;
   updatedAt?: T;
   createdAt?: T;
   email?: T;
@@ -2068,7 +2145,7 @@ export interface TaskSchedulePublish {
           value: number | Post;
         } | null);
     global?: string | null;
-    user?: (number | null) | User;
+    user?: (number | null) | Admin;
   };
   output?: unknown;
 }
