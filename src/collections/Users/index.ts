@@ -41,25 +41,19 @@ export const Users: CollectionConfig = {
         readOnly: true,
       },
     },
-    {
-      name: 'examResults',
-      type: 'relationship',
-      relationTo: 'results',
-      hasMany: true,
-      admin: {
-        readOnly: true,
-      },
-    },
+    // {
+    //   name: 'examResults',
+    //   type: 'relationship',
+    //   relationTo: 'results',
+    //   hasMany: true,
+    //   admin: {
+    //     readOnly: true,
+    //   },
+    // },
     {
       name: 'overallPerformance',
       type: 'array',
-      fields: [
-        {
-          name: 'subject',
-          type: 'relationship',
-          relationTo: 'subjects',
-          required: true,
-        },
+      fields: [//add subject wise performance later
         {
           name: 'averageScore',
           type: 'number',

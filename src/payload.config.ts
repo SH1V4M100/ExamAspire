@@ -6,17 +6,14 @@ import path from 'path'
 import { buildConfig, PayloadRequest } from 'payload'
 import { fileURLToPath } from 'url'
 import { Exams } from './collections/Exams'
-import { Results } from './collections/Results'
-import { Attempts } from './collections/Attempts'
+//import { Results } from './collections/Results'
+//import { Attempts } from './collections/Attempts'
 import { Categories } from './collections/Categories'
 import { Media } from './collections/Media'
 import { Pages } from './collections/Pages'
 import { Posts } from './collections/Posts'
 import { Users } from './collections/Users'
 import { Admin } from './collections/Admin'
-import { Subjects } from './collections/Subjects'
-import { Topics } from './collections/Topics'
-import { Questions } from './collections/Questions'
 import { Footer } from './Footer/config'
 import { Header } from './Header/config'
 import { plugins } from './plugins'
@@ -70,7 +67,7 @@ export default buildConfig({
       connectionString: process.env.DATABASE_URI || '',
     },
   }),
-  collections: [Pages, Posts, Media, Categories, Users, Admin, Subjects, Topics, Questions, Exams, Attempts, Results],
+  collections: [Pages, Posts, Media, Categories, Users, Admin, Exams],
   cors: [getServerSideURL()].filter(Boolean),
   globals: [Header, Footer],
   plugins: [

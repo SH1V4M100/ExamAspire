@@ -7,7 +7,7 @@ export const Exams: CollectionConfig = {
   slug: 'exams',
   admin: {
     useAsTitle: 'title',
-    defaultColumns: ['title', 'subject', 'duration', 'createdAt'],
+    defaultColumns: ['title', 'duration', 'createdAt'],
   },
   access: {
     read: authenticatedOrPublished,
@@ -32,20 +32,8 @@ export const Exams: CollectionConfig = {
         {
           name: 'instruction',
           type: 'text',
-        }
-      ]
-    },
-    {
-      name: 'subject',
-      type: 'relationship',
-      relationTo: 'subjects',
-      required: true,
-    },
-    {
-      name: 'topics',
-      type: 'relationship',
-      relationTo: 'topics',
-      hasMany: true,
+        },
+      ],
     },
     {
       name: 'duration',
@@ -53,16 +41,6 @@ export const Exams: CollectionConfig = {
       required: true,
       admin: {
         description: 'Duration in minutes',
-      },
-    },
-    {
-      name: 'passingPercentage',
-      type: 'number',
-      min: 0,
-      max: 100,
-      defaultValue: 35,
-      admin: {
-        description: 'Percentage required to pass the exam',
       },
     },
     {
@@ -90,16 +68,76 @@ export const Exams: CollectionConfig = {
         },
       },
     },
+
+    // --- Grouped Subject Sections with Questions ---
     {
-      name: 'questions',
-      type: 'relationship',
-      relationTo: 'questions',
-      hasMany: true,
+      name: 'sections',
+      type: 'array',
       required: true,
       admin: {
-        description: 'Select questions for this exam',
+        description: 'Add subject sections with their respective questions',
       },
+      fields: [
+        {
+          name: 'subject',
+          type: 'select',
+          required: true,
+          options: [
+            { label: 'Physics', value: 'physics' },
+            { label: 'Chemistry', value: 'chemistry' },
+            { label: 'Maths', value: 'maths' },
+          ],
+          admin: {
+            description: 'Choose the subject for this section',
+          },
+        },
+        {
+          name: 'questions',
+          type: 'array',
+          required: true,
+          admin: {
+            description: 'Enter questions for this subject',
+          },
+          fields: [
+            {
+              name: 'questionText',
+              type: 'textarea',
+              required: true,
+            },
+            {
+              name: 'options',
+              type: 'array',
+              required: true,
+              minRows: 2,
+              maxRows: 6,
+              fields: [
+                {
+                  name: 'text',
+                  type: 'text',
+                  required: true,
+                },
+              ],
+            },
+            {
+              name: 'correctOptionIndex',
+              type: 'number',
+              required: true,
+              admin: {
+                description: 'Index (0-based) of the correct option',
+              },
+            },
+            {
+              name: 'explanation',
+              type: 'textarea',
+              admin: {
+                description: 'Optional explanation for the correct answer',
+              },
+            },
+          ],
+        },
+      ],
     },
+
     {
       name: 'randomizeQuestions',
       type: 'checkbox',
@@ -114,15 +152,6 @@ export const Exams: CollectionConfig = {
       defaultValue: true,
       admin: {
         description: 'Randomize the order of options for each question',
-      },
-    },
-    {
-      name: 'maxAttempts',
-      type: 'number',
-      min: 0,
-      defaultValue: 1,
-      admin: {
-        description: 'Maximum number of attempts allowed (0 for unlimited)',
       },
     },
     {
@@ -147,3 +176,5 @@ export const Exams: CollectionConfig = {
     ...slugField(),
   ],
 }
+
+export default Exams

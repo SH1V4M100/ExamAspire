@@ -74,12 +74,7 @@ export interface Config {
     categories: Category;
     users: User;
     admin: Admin;
-    subjects: Subject;
-    topics: Topic;
-    questions: Question;
     exams: Exam;
-    attempts: Attempt;
-    results: Result;
     redirects: Redirect;
     forms: Form;
     'form-submissions': FormSubmission;
@@ -97,12 +92,7 @@ export interface Config {
     categories: CategoriesSelect<false> | CategoriesSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
     admin: AdminSelect<false> | AdminSelect<true>;
-    subjects: SubjectsSelect<false> | SubjectsSelect<true>;
-    topics: TopicsSelect<false> | TopicsSelect<true>;
-    questions: QuestionsSelect<false> | QuestionsSelect<true>;
     exams: ExamsSelect<false> | ExamsSelect<true>;
-    attempts: AttemptsSelect<false> | AttemptsSelect<true>;
-    results: ResultsSelect<false> | ResultsSelect<true>;
     redirects: RedirectsSelect<false> | RedirectsSelect<true>;
     forms: FormsSelect<false> | FormsSelect<true>;
     'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>;
@@ -413,10 +403,8 @@ export interface User {
   name?: string | null;
   institution?: string | null;
   completedExams?: (number | Exam)[] | null;
-  examResults?: (number | Result)[] | null;
   overallPerformance?:
     | {
-        subject: number | Subject;
         averageScore?: number | null;
         totalAttempts?: number | null;
         successfulAttempts?: number | null;
@@ -449,16 +437,10 @@ export interface Exam {
         id?: string | null;
       }[]
     | null;
-  subject: number | Subject;
-  topics?: (number | Topic)[] | null;
   /**
    * Duration in minutes
    */
   duration: number;
-  /**
-   * Percentage required to pass the exam
-   */
-  passingPercentage?: number | null;
   isNegativeMarkingEnabled?: boolean | null;
   /**
    * When this exam becomes available (optional)
@@ -469,9 +451,34 @@ export interface Exam {
    */
   endDate?: string | null;
   /**
-   * Select questions for this exam
+   * Add subject sections with their respective questions
    */
-  questions: (number | Question)[];
+  sections: {
+    /**
+     * Choose the subject for this section
+     */
+    subject: 'physics' | 'chemistry' | 'maths';
+    /**
+     * Enter questions for this subject
+     */
+    questions: {
+      questionText: string;
+      options: {
+        text: string;
+        id?: string | null;
+      }[];
+      /**
+       * Index (0-based) of the correct option
+       */
+      correctOptionIndex: number;
+      /**
+       * Optional explanation for the correct answer
+       */
+      explanation?: string | null;
+      id?: string | null;
+    }[];
+    id?: string | null;
+  }[];
   /**
    * Randomize the order of questions for each attempt
    */
@@ -481,162 +488,11 @@ export interface Exam {
    */
   randomizeOptions?: boolean | null;
   /**
-   * Maximum number of attempts allowed (0 for unlimited)
-   */
-  maxAttempts?: number | null;
-  /**
    * Only published exams are visible to students
    */
   _status: 'draft' | 'published';
   slug?: string | null;
   slugLock?: boolean | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "subjects".
- */
-export interface Subject {
-  id: number;
-  name: string;
-  description?: string | null;
-  slug?: string | null;
-  slugLock?: boolean | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "topics".
- */
-export interface Topic {
-  id: number;
-  name: string;
-  description?: string | null;
-  subject: number | Subject;
-  slug?: string | null;
-  slugLock?: boolean | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "questions".
- */
-export interface Question {
-  id: number;
-  questionText: string;
-  /**
-   * Add between 2 and 6 options for this question
-   */
-  options: {
-    optionText: string;
-    isCorrect?: boolean | null;
-    /**
-     * Explanation for why this option is correct/incorrect
-     */
-    explanation?: string | null;
-    id?: string | null;
-  }[];
-  /**
-   * Overall explanation for the correct answer
-   */
-  explanation?: string | null;
-  difficulty: 'easy' | 'medium' | 'hard';
-  /**
-   * Points awarded for a correct answer
-   */
-  marks: number;
-  /**
-   * Points deducted for an incorrect answer (use 0 for no negative marking)
-   */
-  negativeMark?: number | null;
-  topic: number | Topic;
-  /**
-   * Add tags to categorize questions
-   */
-  tags?:
-    | {
-        tag?: string | null;
-        id?: string | null;
-      }[]
-    | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "results".
- */
-export interface Result {
-  id: number;
-  user: number | User;
-  exam: number | Exam;
-  attempts?: (number | Attempt)[] | null;
-  totalAttempts?: number | null;
-  successfulAttempts?: number | null;
-  averageScore?: number | null;
-  highestScore?: number | null;
-  lowestScore?: number | null;
-  /**
-   * Average time spent in seconds
-   */
-  averageTimeSpent?: number | null;
-  performanceTrend?:
-    | {
-        attemptDate?: string | null;
-        score?: number | null;
-        id?: string | null;
-      }[]
-    | null;
-  questionPerformance?:
-    | {
-        question?: (number | null) | Question;
-        correctAttempts?: number | null;
-        totalAttempts?: number | null;
-        /**
-         * Percentage of correct attempts
-         */
-        accuracyRate?: number | null;
-        id?: string | null;
-      }[]
-    | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "attempts".
- */
-export interface Attempt {
-  id: number;
-  user: number | User;
-  exam: number | Exam;
-  startedAt: string;
-  completedAt?: string | null;
-  responses?:
-    | {
-        question: number | Question;
-        selectedOptions?:
-          | {
-              optionIndex: number;
-              id?: string | null;
-            }[]
-          | null;
-        isCorrect?: boolean | null;
-        marks?: number | null;
-        id?: string | null;
-      }[]
-    | null;
-  score?: number | null;
-  maxScore?: number | null;
-  percentage?: number | null;
-  isPassed?: boolean | null;
-  /**
-   * Time spent in seconds
-   */
-  timeSpent?: number | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -1200,28 +1056,8 @@ export interface PayloadLockedDocument {
         value: number | Admin;
       } | null)
     | ({
-        relationTo: 'subjects';
-        value: number | Subject;
-      } | null)
-    | ({
-        relationTo: 'topics';
-        value: number | Topic;
-      } | null)
-    | ({
-        relationTo: 'questions';
-        value: number | Question;
-      } | null)
-    | ({
         relationTo: 'exams';
         value: number | Exam;
-      } | null)
-    | ({
-        relationTo: 'attempts';
-        value: number | Attempt;
-      } | null)
-    | ({
-        relationTo: 'results';
-        value: number | Result;
       } | null)
     | ({
         relationTo: 'redirects';
@@ -1582,11 +1418,9 @@ export interface UsersSelect<T extends boolean = true> {
   name?: T;
   institution?: T;
   completedExams?: T;
-  examResults?: T;
   overallPerformance?:
     | T
     | {
-        subject?: T;
         averageScore?: T;
         totalAttempts?: T;
         successfulAttempts?: T;
@@ -1624,59 +1458,6 @@ export interface AdminSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "subjects_select".
- */
-export interface SubjectsSelect<T extends boolean = true> {
-  name?: T;
-  description?: T;
-  slug?: T;
-  slugLock?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "topics_select".
- */
-export interface TopicsSelect<T extends boolean = true> {
-  name?: T;
-  description?: T;
-  subject?: T;
-  slug?: T;
-  slugLock?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "questions_select".
- */
-export interface QuestionsSelect<T extends boolean = true> {
-  questionText?: T;
-  options?:
-    | T
-    | {
-        optionText?: T;
-        isCorrect?: T;
-        explanation?: T;
-        id?: T;
-      };
-  explanation?: T;
-  difficulty?: T;
-  marks?: T;
-  negativeMark?: T;
-  topic?: T;
-  tags?:
-    | T
-    | {
-        tag?: T;
-        id?: T;
-      };
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "exams_select".
  */
 export interface ExamsSelect<T extends boolean = true> {
@@ -1688,84 +1469,35 @@ export interface ExamsSelect<T extends boolean = true> {
         instruction?: T;
         id?: T;
       };
-  subject?: T;
-  topics?: T;
   duration?: T;
-  passingPercentage?: T;
   isNegativeMarkingEnabled?: T;
   startDate?: T;
   endDate?: T;
-  questions?: T;
+  sections?:
+    | T
+    | {
+        subject?: T;
+        questions?:
+          | T
+          | {
+              questionText?: T;
+              options?:
+                | T
+                | {
+                    text?: T;
+                    id?: T;
+                  };
+              correctOptionIndex?: T;
+              explanation?: T;
+              id?: T;
+            };
+        id?: T;
+      };
   randomizeQuestions?: T;
   randomizeOptions?: T;
-  maxAttempts?: T;
   _status?: T;
   slug?: T;
   slugLock?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "attempts_select".
- */
-export interface AttemptsSelect<T extends boolean = true> {
-  user?: T;
-  exam?: T;
-  startedAt?: T;
-  completedAt?: T;
-  responses?:
-    | T
-    | {
-        question?: T;
-        selectedOptions?:
-          | T
-          | {
-              optionIndex?: T;
-              id?: T;
-            };
-        isCorrect?: T;
-        marks?: T;
-        id?: T;
-      };
-  score?: T;
-  maxScore?: T;
-  percentage?: T;
-  isPassed?: T;
-  timeSpent?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "results_select".
- */
-export interface ResultsSelect<T extends boolean = true> {
-  user?: T;
-  exam?: T;
-  attempts?: T;
-  totalAttempts?: T;
-  successfulAttempts?: T;
-  averageScore?: T;
-  highestScore?: T;
-  lowestScore?: T;
-  averageTimeSpent?: T;
-  performanceTrend?:
-    | T
-    | {
-        attemptDate?: T;
-        score?: T;
-        id?: T;
-      };
-  questionPerformance?:
-    | T
-    | {
-        question?: T;
-        correctAttempts?: T;
-        totalAttempts?: T;
-        accuracyRate?: T;
-        id?: T;
-      };
   updatedAt?: T;
   createdAt?: T;
 }
