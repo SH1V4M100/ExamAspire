@@ -50,7 +50,7 @@ export default function Home() {
             <div className="flex flex-col items-center justify-center space-y-8 text-center">
               <div className="space-y-2">
                 <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
-                  Why Choose ExamPro?
+                  Why Choose ExamAspire?
                 </h2>
                 <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl">
                   Built with modern technology and student needs in mind
@@ -111,7 +111,7 @@ export default function Home() {
               </div>
               <div className="mx-auto max-w-3xl space-y-4">
                 <p className="text-muted-foreground">
-                  ExamPro is the official examination platform for Jadavpur University students, designed to provide a seamless and efficient examination experience. Join thousands of your peers who are already benefiting from our modern approach to academic assessment.
+                  ExamAspire is the official examination platform for Jadavpur University students, designed to provide a seamless and efficient examination experience. Join thousands of your peers who are already benefiting from our modern approach to academic assessment.
                 </p>
                 <Link href="/signup">
                   <Button size="lg">Get Started Today</Button>
@@ -125,7 +125,7 @@ export default function Home() {
         <div className="container flex flex-col items-center justify-between gap-4 md:h-24 md:flex-row">
           <div className="flex flex-col items-center gap-2 md:items-start">
             <p className="text-sm text-muted-foreground">
-              © 2025 ExamPro. All rights reserved.
+              © 2025 ExamAspire. All rights reserved.
             </p>
             <p className="text-sm text-muted-foreground">
               Made with ❤️ at Jadavpur University

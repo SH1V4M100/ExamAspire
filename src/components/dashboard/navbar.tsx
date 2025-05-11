@@ -23,7 +23,7 @@ const navItems = [
   },
   {
     name: 'Exams',
-    href: '/dashboard/exams',
+    href: '/exams',
     icon: GraduationCap,
   },
   {
@@ -44,7 +44,7 @@ export function Navbar() {
           className="flex items-center gap-2 font-semibold"
         >
           <GraduationCap className="h-6 w-6" />
-          <span className="hidden md:inline-block">ExamPro</span>
+          <span className="hidden md:inline-block">ExamAspire</span>
         </Link>
 
         <div className="hidden md:flex md:items-center md:gap-4 md:pl-4">
