@@ -31,8 +31,11 @@ export function getExamStatus(exam: Exam): ExamStatus {
   }
 }
 
-export function formatDate(date: Date): string {
-  return date.toLocaleDateString('en-US', {
+export function formatDate(date: Date | string): string {
+  // Convert string to Date if needed
+  const dateObj = typeof date === 'string' ? new Date(date) : date;
+  
+  return dateObj.toLocaleDateString('en-US', {
     month: 'short',
     day: 'numeric',
     year: 'numeric',

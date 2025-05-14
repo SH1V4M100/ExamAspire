@@ -58,16 +58,6 @@ export function ExamCard({ exam }: ExamCardProps) {
                 <span>End: {formatDate(exam.endDate)}</span>
               </div>
             </div>
-            
-            {exam.attempted && (
-              <div className="mt-4">
-                <div className="flex justify-between items-center mb-1">
-                  <span className="text-sm font-medium">Progress</span>
-                  <span className="text-sm font-medium">{exam.progress}%</span>
-                </div>
-                <Progress value={exam.progress} className="h-2" />
-              </div>
-            )}
           </div>
         </CardContent>
         <CardFooter>

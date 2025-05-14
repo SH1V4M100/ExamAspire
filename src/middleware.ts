@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
-const JWT_SECRET = process.env.PAYLOAD_SECRET!;
 const PAYLOAD_URL = process.env.NEXT_PUBLIC_SERVER_URL!;
 
 export async function middleware(request: NextRequest) {
