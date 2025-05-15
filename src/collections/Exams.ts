@@ -105,6 +105,15 @@ export const Exams: CollectionConfig = {
               required: true,
             },
             {
+              name: 'image',
+              type: 'upload',
+              relationTo: 'media', // Must match your media collection slug
+              required: false,
+              admin: {
+                description: 'Optional image for the question',
+              },
+            },
+            {
               name: 'options',
               type: 'array',
               required: true,
