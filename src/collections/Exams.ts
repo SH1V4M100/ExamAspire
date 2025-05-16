@@ -105,6 +105,19 @@ export const Exams: CollectionConfig = {
               required: true,
             },
             {
+              name: 'questionType',
+              type: 'select',
+              required: true,
+              options: [
+                { label: 'Single Correct', value: 'single' },
+                { label: 'Multiple Correct', value: 'multi' },
+                { label: 'Integer Type', value: 'integer' },
+              ],
+              admin: {
+                description: 'Specify the type of this question',
+              },
+            },
+            {
               name: 'image',
               type: 'upload',
               relationTo: 'media', // Must match your media collection slug
@@ -118,7 +131,7 @@ export const Exams: CollectionConfig = {
               type: 'array',
               required: true,
               minRows: 2,
-              maxRows: 6,
+              maxRows: 10,
               fields: [
                 {
                   name: 'text',
@@ -138,23 +151,6 @@ export const Exams: CollectionConfig = {
           ],
         },
       ],
-    },
-
-    {
-      name: 'randomizeQuestions',
-      type: 'checkbox',
-      defaultValue: true,
-      admin: {
-        description: 'Randomize the order of questions for each attempt',
-      },
-    },
-    {
-      name: 'randomizeOptions',
-      type: 'checkbox',
-      defaultValue: true,
-      admin: {
-        description: 'Randomize the order of options for each question',
-      },
     },
     {
       name: '_status',

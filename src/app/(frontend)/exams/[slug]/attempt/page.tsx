@@ -1,0 +1,75 @@
+'use client';
+import React, { useState, useEffect } from 'react';
+import { Exam } from '@/lib/types';
+import { fetchExam } from '@/hardcoded_exam/api';
+import ExamAttempt from '@/components/ExamAttempt';
+
+function App() {
+  const [exam, setExam] = useState<Exam | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const loadExam = async () => {
+      try {
+        const examData = await fetchExam(1); // Hardcoded to exam ID 1 for now
+        setExam(examData);
+      } catch (err) {
+        setError('Failed to load exam. Please try again later.');
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadExam();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <h2 className="text-lg font-medium text-gray-700">Loading exam...</h2>
+        </div>
+      </div>
+    );
+  }
+
+  if (error || !exam) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="max-w-md w-full bg-white rounded-lg shadow-md p-8 text-center">
+          <svg
+            className="w-16 h-16 text-red-500 mx-auto mb-4"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+            />
+          </svg>
+          <h2 className="text-xl font-bold text-gray-800 mb-2">
+            Error Loading Exam
+          </h2>
+          <p className="text-gray-600">{error || 'An unexpected error occurred.'}</p>
+          <button
+            onClick={() => window.location.reload()}
+            className="mt-6 px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors"
+          >
+            Try Again
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  return <ExamAttempt exam={exam} />;
+}
+
+export default App;

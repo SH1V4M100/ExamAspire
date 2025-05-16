@@ -392,6 +392,10 @@ export interface Exam {
     questions: {
       questionText: string;
       /**
+       * Specify the type of this question
+       */
+      questionType: 'single' | 'multi' | 'integer';
+      /**
        * Optional image for the question
        */
       image?: (number | null) | Media;
@@ -407,14 +411,6 @@ export interface Exam {
     }[];
     id?: string | null;
   }[];
-  /**
-   * Randomize the order of questions for each attempt
-   */
-  randomizeQuestions?: boolean | null;
-  /**
-   * Randomize the order of options for each question
-   */
-  randomizeOptions?: boolean | null;
   /**
    * Only published exams are visible to students
    */
@@ -1078,6 +1074,7 @@ export interface ExamsSelect<T extends boolean = true> {
           | T
           | {
               questionText?: T;
+              questionType?: T;
               image?: T;
               options?:
                 | T
@@ -1090,8 +1087,6 @@ export interface ExamsSelect<T extends boolean = true> {
             };
         id?: T;
       };
-  randomizeQuestions?: T;
-  randomizeOptions?: T;
   _status?: T;
   slug?: T;
   slugLock?: T;

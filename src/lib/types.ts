@@ -1,28 +1,68 @@
-export type Exam = {
+export interface Option {
   id: string;
+  text: string;
+  isCorrect: boolean;
+}
+
+export interface Image {
+  id: number;
+  url: string;
+  _key: string;
+  alt: string | null;
+  caption: string | null;
+  updatedAt: string;
+  createdAt: string;
+  thumbnailURL: null;
+  filename: string;
+  mimeType: string;
+  filesize: number;
+  width: number;
+  height: number;
+  focalX: number;
+  focalY: number;
+}
+
+export type QuestionType = 'single' | 'multi' | 'integer';
+
+export interface Question {
+  id: string;
+  questionText: string;
+  questionType: QuestionType;
+  image: Image | null;
+  options: Option[];
+}
+
+export interface Section {
+  id: string;
+  subject: string;
+  questions: Question[];
+}
+
+export interface Exam {
+  id: number;
   title: string;
   description: string;
   instructions: string[];
-  duration: number; // in minutes
+  duration: number;
   isNegativeMarkingEnabled: boolean;
-  startDate: Date;
-  endDate: Date;
-  attempted: boolean;
-  sections: {
-    subject: string;
-    questions: {
-      questionText: string;
-      options: string[];
-      correctOptionIndex: number;
-      explanation?: string;
-    }[];
-  }[];
-  randomizeQuestions: boolean;
-  randomizeOptions: boolean;
-  _status: 'draft' | 'published';
+  startDate: string;
+  endDate: string;
+  sections: Section[];
+  _status: string;
   slug: string;
-  createdAt: Date;
-  updatedAt: Date;
-};
+}
 
+export interface UserAnswer {
+  questionId: string;
+  selectedOptionIds: string[];
+  isFlagged: boolean;
+}
+
+export interface ExamAttemptState {
+  examId: number;
+  answers: Record<string, UserAnswer>;
+  currentSectionId: string;
+  currentQuestionIndex: number;
+  startTime: number;
+}
 export type ExamStatus = 'upcoming' | 'active' | 'expired';
