@@ -125,22 +125,15 @@ export const Exams: CollectionConfig = {
                   type: 'text',
                   required: true,
                 },
+                {
+                  name: 'isCorrect',
+                  type: 'checkbox',
+                  defaultValue: false,
+                  admin: {
+                    description: 'Mark this option as correct',
+                  },
+                },
               ],
-            },
-            {
-              name: 'correctOptionIndex',
-              type: 'number',
-              required: true,
-              admin: {
-                description: 'Index (0-based) of the correct option',
-              },
-            },
-            {
-              name: 'explanation',
-              type: 'textarea',
-              admin: {
-                description: 'Optional explanation for the correct answer',
-              },
             },
           ],
         },

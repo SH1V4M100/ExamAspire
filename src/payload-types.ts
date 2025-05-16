@@ -397,16 +397,12 @@ export interface Exam {
       image?: (number | null) | Media;
       options: {
         text: string;
+        /**
+         * Mark this option as correct
+         */
+        isCorrect?: boolean | null;
         id?: string | null;
       }[];
-      /**
-       * Index (0-based) of the correct option
-       */
-      correctOptionIndex: number;
-      /**
-       * Optional explanation for the correct answer
-       */
-      explanation?: string | null;
       id?: string | null;
     }[];
     id?: string | null;
@@ -1087,10 +1083,9 @@ export interface ExamsSelect<T extends boolean = true> {
                 | T
                 | {
                     text?: T;
+                    isCorrect?: T;
                     id?: T;
                   };
-              correctOptionIndex?: T;
-              explanation?: T;
               id?: T;
             };
         id?: T;
