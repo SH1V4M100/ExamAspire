@@ -3,27 +3,37 @@ import React, { useState, useEffect } from 'react';
 import { Exam } from '@/lib/types';
 import { fetchExam } from '@/hardcoded_exam/api';
 import ExamAttempt from '@/components/ExamAttempt';
+import { useParams } from 'next/navigation';
 
-function App() {
+function ExamAttemptPage() {
   const [exam, setExam] = useState<Exam | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const { slug } = useParams();
 
   useEffect(() => {
     const loadExam = async () => {
       try {
-        const examData = await fetchExam(1); // Hardcoded to exam ID 1 for now
+        // Convert slug to string if it's an array (handles dynamic segments)
+        const examSlug = Array.isArray(slug) ? slug[0] : slug;
+  
+        if (!examSlug) {
+          throw new Error('Exam ID is missing');
+        }
+  
+        const examData = await fetchExam(examSlug);
         setExam(examData);
       } catch (err) {
-        setError('Failed to load exam. Please try again later.');
-        console.error(err);
+        console.error('Error loading exam:', err);
+        setError(err instanceof Error ? err.message : 'Failed to load exam. Please try again later.');
       } finally {
         setLoading(false);
       }
     };
-
+  
     loadExam();
-  }, []);
+  }, [slug]);
+  
 
   if (loading) {
     return (
@@ -72,4 +82,4 @@ function App() {
   return <ExamAttempt exam={exam} />;
 }
 
-export default App;
+export default ExamAttemptPage;
