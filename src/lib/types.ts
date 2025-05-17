@@ -64,5 +64,6 @@ export interface ExamAttemptState {
   currentSectionId: string;
   currentQuestionIndex: number;
   startTime: number;
+  examStarted: boolean;
 }
 export type ExamStatus = 'upcoming' | 'active' | 'expired';

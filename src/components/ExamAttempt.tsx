@@ -25,13 +25,20 @@ const ExamAttempt: React.FC<ExamAttemptProps> = ({ exam }) => {
     sectionStats,
     totalProgress,
     getUserAnswer,
-    submitExam
+    submitExam,
+    startExam,
+    isExamStarted
   } = useExamState(exam);
   
   const [showInstructions, setShowInstructions] = useState(true);
   const [showSubmitModal, setShowSubmitModal] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   
+  const handleStartExam = () => {
+    startExam();
+    setShowInstructions(false);
+  };
+
   // If we don't have a current section or question, show an error
   if (!currentSection || !currentQuestion) {
     return (
@@ -74,8 +81,9 @@ const ExamAttempt: React.FC<ExamAttemptProps> = ({ exam }) => {
       <div className="min-h-screen bg-gray-50">
         <ExamHeader 
           title={exam.title} 
-          remainingTime={remainingTime} 
+          remainingTime={isExamStarted ? remainingTime : exam.duration * 60} 
           totalProgress={totalProgress}
+          isExamStarted={isExamStarted}
         />
         
         <div className="max-w-3xl mx-auto py-8 px-4 sm:px-6">
@@ -120,7 +128,7 @@ const ExamAttempt: React.FC<ExamAttemptProps> = ({ exam }) => {
               </div>
               
               <button
-                onClick={() => setShowInstructions(false)}
+                onClick={handleStartExam}
                 className="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
               >
                 Start Exam
@@ -155,8 +163,9 @@ const isLastQuestion =
     <div className="min-h-screen bg-gray-50">
       <ExamHeader 
         title={exam.title} 
-        remainingTime={remainingTime} 
+        remainingTime={isExamStarted ? remainingTime : exam.duration * 60} 
         totalProgress={totalProgress}
+        isExamStarted={isExamStarted}
       />
       
       <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">

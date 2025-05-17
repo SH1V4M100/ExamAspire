@@ -7,7 +7,16 @@ export const useExamState = (exam: Exam) => {
     const savedState = loadExamState(exam.id);
     
     if (savedState) {
-      return savedState;
+      // If we have a saved state with a start time, use it
+      if (savedState.startTime) {
+        return savedState;
+      }
+      // If we have saved state but no start time, keep the answers but reset the start time
+      return {
+        ...savedState,
+        startTime: 0, // Will be set when exam starts
+        examStarted: false
+      };
     }
     
     return {
@@ -15,19 +24,33 @@ export const useExamState = (exam: Exam) => {
       answers: {},
       currentSectionId: exam.sections[0]?.id || '',
       currentQuestionIndex: 0,
-      startTime: Date.now(),
+      startTime: 0, // Will be set when exam starts
+      examStarted: false
     };
   }, [exam.id, exam.sections]);
 
   const [examState, setExamState] = useState<ExamAttemptState>(initialState);
   
+  // Start the exam - called when user clicks "Start Exam"
+  const startExam = () => {
+    setExamState(prev => ({
+      ...prev,
+      startTime: Date.now(),
+      examStarted: true
+    }));
+  };
+
   // Calculate remaining time in seconds
   const remainingTime = useMemo(() => {
+    if (!examState.examStarted) {
+      return exam.duration * 60; // Return full duration if exam hasn't started
+    }
+    
     const elapsedMs = Date.now() - examState.startTime;
     const durationMs = exam.duration * 60 * 1000;
     const remainingMs = Math.max(0, durationMs - elapsedMs);
     return Math.floor(remainingMs / 1000);
-  }, [exam.duration, examState.startTime]);
+  }, [exam.duration, examState.startTime, examState.examStarted]);
 
   // Save state to localStorage whenever it changes
   useEffect(() => {
@@ -208,10 +231,12 @@ export const useExamState = (exam: Exam) => {
     goToPrevQuestion,
     goToSection,
     goToQuestion,
-    submitExam,
     sectionStats,
     totalProgress,
     getUserAnswer: (questionId: string): UserAnswer | undefined => 
-      examState.answers[questionId]
+      examState.answers[questionId],
+    submitExam,
+    startExam,
+    isExamStarted: examState.examStarted || false
   };
 };
