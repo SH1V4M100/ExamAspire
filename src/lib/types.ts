@@ -45,6 +45,7 @@ export interface Exam {
   instructions: string[];
   duration: number;
   isNegativeMarkingEnabled: boolean;
+  attempted: boolean;
   startDate: string;
   endDate: string;
   sections: Section[];

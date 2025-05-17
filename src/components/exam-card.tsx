@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from 'next/navigation';
 import { Exam } from "@/lib/types";
 import { formatDuration, formatDate, getExamStatus } from "@/lib/utils";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -14,16 +15,13 @@ interface ExamCardProps {
 }
 
 export function ExamCard({ exam }: ExamCardProps) {
+  const router = useRouter();
   const status = getExamStatus(exam);
   const isDisabled = status === 'upcoming' || status === 'expired';
   
   const handleExamAction = () => {
-    // In a real app, this would navigate to the exam page or show a confirmation dialog
-    if (exam.attempted) {
-      console.log(`Revisiting exam: ${exam.id}`);
-    } else {
-      console.log(`Starting exam: ${exam.id}`);
-    }
+    // Navigate to the exam attempt page
+    router.push(`/exams/${exam.id}/attempt`);
   };
 
   return (
