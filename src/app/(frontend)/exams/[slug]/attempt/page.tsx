@@ -1,7 +1,7 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import { Exam } from '@/lib/types';
-import { fetchExam } from '@/hardcoded_exam/api';
+import { fetchExam } from '@/server/exam/api';
 import ExamAttempt from '@/components/ExamAttempt';
 import { useParams } from 'next/navigation';
 
