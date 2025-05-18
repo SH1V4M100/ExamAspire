@@ -75,6 +75,7 @@ export interface Config {
     users: User;
     admin: Admin;
     exams: Exam;
+    'exam-attempts': ExamAttempt;
     forms: Form;
     'payload-jobs': PayloadJob;
     'payload-locked-documents': PayloadLockedDocument;
@@ -90,6 +91,7 @@ export interface Config {
     users: UsersSelect<false> | UsersSelect<true>;
     admin: AdminSelect<false> | AdminSelect<true>;
     exams: ExamsSelect<false> | ExamsSelect<true>;
+    'exam-attempts': ExamAttemptsSelect<false> | ExamAttemptsSelect<true>;
     forms: FormsSelect<false> | FormsSelect<true>;
     'payload-jobs': PayloadJobsSelect<false> | PayloadJobsSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
@@ -621,6 +623,30 @@ export interface Admin {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "exam-attempts".
+ */
+export interface ExamAttempt {
+  id: number;
+  user: number | User;
+  exam: number | Exam;
+  answers:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  score: number;
+  totalMarks: number;
+  timeSpent: number;
+  submittedAt: string;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-jobs".
  */
 export interface PayloadJob {
@@ -745,6 +771,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'exams';
         value: number | Exam;
+      } | null)
+    | ({
+        relationTo: 'exam-attempts';
+        value: number | ExamAttempt;
       } | null)
     | ({
         relationTo: 'forms';
@@ -1090,6 +1120,21 @@ export interface ExamsSelect<T extends boolean = true> {
   _status?: T;
   slug?: T;
   slugLock?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "exam-attempts_select".
+ */
+export interface ExamAttemptsSelect<T extends boolean = true> {
+  user?: T;
+  exam?: T;
+  answers?: T;
+  score?: T;
+  totalMarks?: T;
+  timeSpent?: T;
+  submittedAt?: T;
   updatedAt?: T;
   createdAt?: T;
 }

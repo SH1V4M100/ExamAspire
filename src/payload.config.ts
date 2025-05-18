@@ -6,6 +6,7 @@ import path from 'path'
 import { buildConfig, PayloadRequest } from 'payload'
 import { fileURLToPath } from 'url'
 import { Exams } from './collections/Exams'
+import { ExamAttempts } from './collections/ExamAttempts' 
 //import { Results } from './collections/Results'
 //import { Attempts } from './collections/Attempts'
 import { Categories } from './collections/Categories'
@@ -68,7 +69,7 @@ export default buildConfig({
       connectionString: process.env.DATABASE_URI || '',
     },
   }),
-  collections: [Pages, Posts, Media, Categories, Users, Admin, Exams, Forms],
+  collections: [Pages, Posts, Media, Categories, Users, Admin, Exams, ExamAttempts, Forms],
   cors: [getServerSideURL()].filter(Boolean),
   globals: [Header, Footer],
   plugins: [

@@ -178,10 +178,86 @@ export const useExamState = (exam: Exam) => {
     }));
   };
 
-  const submitExam = () => {
-    // In a real application, you would send the answers to your backend here
+  // Update the submitExam function in useExamState.ts
+const submitExam = async () => {
+  try {
+    // Calculate score based on answers
+    let score = 0;
+    let totalMarks = 0;
+
+    // Get all questions from all sections
+    const allQuestions = exam.sections.flatMap(section => 
+      section.questions.map(question => ({
+        ...question,
+        sectionId: section.id
+      }))
+    );
+
+    // Calculate score for each question
+    allQuestions.forEach(question => {
+      const userAnswer = examState.answers[question.id];
+      if (!userAnswer || !userAnswer.selectedOptionIds) return;
+
+      const correctOptions = question.options
+        .filter(opt => opt.isCorrect)
+        .map(opt => opt.id);
+
+      const isCorrect = JSON.stringify([...userAnswer.selectedOptionIds].sort()) === 
+                       JSON.stringify([...correctOptions].sort());
+
+      // Apply marking scheme based on question type
+      switch (question.questionType) {
+        case 'single':
+          // +4 for correct, -1 for incorrect
+          score += isCorrect ? 4 : -1;
+          totalMarks += 4; // Max marks for single correct
+          break;
+          
+        case 'multi':
+        case 'integer':
+          // +4 for correct, 0 for incorrect
+          if (isCorrect) {
+            score += 4;
+          }
+          totalMarks += 4; // Max marks for multi/integer
+          break;
+          
+        default:
+          console.warn(`Unknown question type: ${question.questionType}`);
+          break;
+      }
+    });
+
+    // Ensure score doesn't go below 0
+    score = Math.max(0, score);
+
+    // Submit to backend
+    const response = await fetch(`/api/exam-attempts/${exam.id}/submit`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        answers: examState.answers,
+        timeSpent: exam.duration * 60 - remainingTime,
+        score,
+        totalMarks
+      }),
+      credentials: 'include'
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to submit exam');
+    }
+
+    // Clear local state
     clearExamState();
-  };
+    return await response.json();
+  } catch (error) {
+    console.error('Error submitting exam:', error);
+    throw error;
+  }
+};
 
   // Statistics
   const sectionStats = useMemo(() => {
