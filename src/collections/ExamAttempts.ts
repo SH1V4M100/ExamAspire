@@ -75,5 +75,40 @@ export const ExamAttempts: CollectionConfig = {
         }
       },
     },
+    {
+      path: '/my-exam-ids',
+      method: 'get',
+      handler: async (req) => {
+        if (!req.user) {
+          return Response.json({ error: 'Unauthorized' }, { status: 401 });
+        }
+    
+        try {
+          const result = await req.payload.find({
+            collection: 'exam-attempts',
+            where: {
+              user: {
+                equals: req.user.id,
+              },
+            },
+            select: {
+              exam: true, // ✅ Only return the exam field
+            },
+            depth: 0, // ✅ Prevent exam relationship from being populated
+            limit: 1000, // or higher if needed
+          });
+    
+          const uniqueExamIds = [
+            ...new Set(result.docs.map((doc) => doc.exam)),
+          ];
+    
+          return Response.json({ examIds: uniqueExamIds });
+        } catch (err) {
+          console.error('Error fetching exam IDs:', err);
+          return Response.json({ error: 'Failed to fetch exam IDs' }, { status: 500 });
+        }
+      },
+    }
+    
   ]
 };

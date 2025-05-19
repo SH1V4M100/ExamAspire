@@ -1,31 +1,41 @@
-
+'use client'
+import React, { useEffect, useState } from 'react';
 import { ExamList } from '@/components/exam-list';
 import { ThemeToggle } from '@/components/ui/theme-toggle';
-import React from 'react';
 
-async function getExams() {
-  try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/exams`);
-    if (!res.ok) {
-      // Handle different HTTP status codes
-      if (res.status === 401) {
-        throw new Error('Authentication required');
-      }
-      if (res.status === 404) {
-        throw new Error('Exams not found');
-      }
-      throw new Error('Failed to fetch exams');
-    }
-    const data = await res.json();
-    return data.docs || [];
-  } catch (err) {
-    console.error('Error fetching exams:', err);
-    return [];
-  }
-}
+export default function Home() {
+  const [exams, setExams] = useState([]);
+  const [attemptedExamIds, setAttemptedExamIds] = useState<number[]>([]);
+  const [loading, setLoading] = useState(true);
 
-export default async function Home() {
-  const exams = await getExams();
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [examsRes, attemptsRes] = await Promise.all([
+          fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/exams`, {
+            credentials: 'include', // optional if CORS
+          }),
+          fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/exam-attempts/my-exam-ids`, {
+            credentials: 'include',
+          }),
+        ]);
+
+        const examsData = await examsRes.json();
+        const attemptedData = await attemptsRes.json();
+        console.log('attemptedData',attemptedData)
+        setExams(examsData?.docs || []);
+        setAttemptedExamIds(attemptedData?.examIds || []);
+      } catch (err) {
+        console.error('Error fetching exams or attempts:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  if (loading) return <div className="p-6 text-center">Loading exams...</div>;
 
   return (
     <main className="min-h-screen">
