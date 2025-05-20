@@ -8,9 +8,10 @@ import { motion } from 'framer-motion';
 
 interface ExamListProps {
   exams: Exam[];
+  attemptedExamIds: number[];
 }
 
-export function ExamList({ exams }: ExamListProps) {
+export function ExamList({ exams, attemptedExamIds }: ExamListProps) {
   const [filteredExams, setFilteredExams] = useState<Exam[]>(exams);
   const [isEmpty, setIsEmpty] = useState(false);
 
@@ -56,7 +57,8 @@ export function ExamList({ exams }: ExamListProps) {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredExams.map((exam) => (
-            <ExamCard key={exam.id} exam={exam} />
+            <ExamCard key={exam.id} 
+            exam={{ ...exam, attempted: attemptedExamIds.includes(exam.id) }} />
           ))}
         </div>
       )}

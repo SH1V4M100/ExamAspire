@@ -6,7 +6,6 @@ import { formatDuration, formatDate, getExamStatus } from "@/lib/utils";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ExamStatusBadge } from "@/components/exam-status-badge";
-import { Progress } from "@/components/ui/progress";
 import { Clock, Calendar, PlayCircle, RotateCcw } from "lucide-react";
 import { motion } from "framer-motion";
 

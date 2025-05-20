@@ -22,7 +22,7 @@ export default function Home() {
 
         const examsData = await examsRes.json();
         const attemptedData = await attemptsRes.json();
-        console.log('attemptedData',attemptedData)
+        //console.log('attemptedData',attemptedData)
         setExams(examsData?.docs || []);
         setAttemptedExamIds(attemptedData?.examIds || []);
       } catch (err) {
@@ -54,7 +54,7 @@ export default function Home() {
               <h2 className="text-2xl font-semibold tracking-tight">Available Exams</h2>
               <p className="text-sm text-muted-foreground">{exams.length} exams found</p>
             </div>
-            <ExamList exams={exams} />
+            <ExamList exams={exams} attemptedExamIds={attemptedExamIds} />
           </div>
         </section>
       </div>
