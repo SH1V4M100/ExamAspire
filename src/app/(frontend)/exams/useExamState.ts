@@ -192,45 +192,53 @@ const submitExam = async () => {
         sectionId: section.id
       }))
     );
-
+    console.log('Answers:', examState.answers);
     // Calculate score for each question
     allQuestions.forEach(question => {
       const userAnswer = examState.answers[question.id];
-      if (!userAnswer || !userAnswer.selectedOptionIds) return;
-
       const correctOptions = question.options
         .filter(opt => opt.isCorrect)
         .map(opt => opt.id);
+      console.log('Correct Options:', correctOptions);
+      console.log('User Answer:', userAnswer ? userAnswer.selectedOptionIds : 'No answer');
 
-      const isCorrect = JSON.stringify([...userAnswer.selectedOptionIds].sort()) === 
+      const isCorrect = userAnswer && userAnswer.selectedOptionIds && 
+                       JSON.stringify([...userAnswer.selectedOptionIds].sort()) === 
                        JSON.stringify([...correctOptions].sort());
-
-      // Apply marking scheme based on question type
+      //marking logic based on question type
       switch (question.questionType) {
-        case 'single':
-          // +4 for correct, -1 for incorrect
+      case 'single':
+        // +4 for correct, -1 for incorrect
+        if (userAnswer && userAnswer.selectedOptionIds) {
           score += isCorrect ? 4 : -1;
-          totalMarks += 4; // Max marks for single correct
-          break;
-          
-        case 'multi':
-        case 'integer':
-          // +4 for correct, 0 for incorrect
-          if (isCorrect) {
-            score += 4;
-          }
-          totalMarks += 4; // Max marks for multi/integer
-          break;
-          
-        default:
-          console.warn(`Unknown question type: ${question.questionType}`);
-          break;
-      }
-    });
+        }
+        totalMarks += 4; // Max marks for single correct
+        break;
+        
+      case 'multi':
+        if (userAnswer && userAnswer.selectedOptionIds) {
+          score += isCorrect ? 4 : -1;
+        }
+        totalMarks += 4; // Max marks for single correct
+        break;
+      case 'integer':
+        // +4 for correct, 0 for incorrect
+        if (isCorrect) {
+          score += 4;
+        }
+        totalMarks += 4; // Max marks for multi/integer
+        break;
+        
+      default:
+        console.warn(`Unknown question type: ${question.questionType}`);
+        break;
+    }
+  });
 
     // Ensure score doesn't go below 0
     score = Math.max(0, score);
-
+    console.log('Calculated Score:', score);
+    console.log('Total Marks:', totalMarks);
     // Submit to backend
     const response = await fetch(`/api/exam-attempts/${exam.id}/submit`, {
       method: 'POST',
@@ -252,7 +260,7 @@ const submitExam = async () => {
 
     // Clear local state
     clearExamState();
-    return await response.json();
+    return "await response.json();"
   } catch (error) {
     console.error('Error submitting exam:', error);
     throw error;

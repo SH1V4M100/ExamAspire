@@ -28,7 +28,7 @@ const navItems = [
   },
   {
     name: 'Results',
-    href: '/dashboard/results',
+    href: '/exams/results',
     icon: BarChart3,
   },
 ];
