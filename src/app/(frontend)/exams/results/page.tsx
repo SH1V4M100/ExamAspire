@@ -1,3 +1,4 @@
+'use client'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
@@ -7,73 +8,37 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Search, Filter, Download } from "lucide-react";
 import { Navbar } from "@/components/dashboard/navbar";
 import { ThemeProvider } from "@/components/ThemeProvider";
-// Dummy data for results
-const examResults = [
-  {
-    id: 1,
-    exam: "Advanced Mathematics",
-    dateAttempted: "May 3, 2025",
-    score: 92,
-  },
-  {
-    id: 2,
-    exam: "Database Systems",
-    dateAttempted: "Apr 28, 2025",
-    score: 85,
-  },
-  {
-    id: 3,
-    exam: "UI/UX Design Principles",
-    dateAttempted: "Apr 20, 2025",
-    score: 79,
-  },
-  {
-    id: 4,
-    exam: "JavaScript Advanced Concepts",
-    dateAttempted: "Apr 15, 2025",
-    score: 95,
-  },
-  {
-    id: 5,
-    exam: "Mobile App Development",
-    dateAttempted: "Apr 10, 2025",
-    score: 65,
-  },
-];
-// Dummy data for student results
+import React, { useEffect, useState } from 'react';
+
+interface ExamAttempt {
+  id: number;
+  exam: {
+    title: string;
+  };
+  score: number;
+  totalMarks: number;
+  submittedAt: string;
+}
+
 export default function ResultsPage() {
-  const examResults = [
-    {
-      id: 1,
-      exam: "Advanced Mathematics",
-      dateAttempted: "May 3, 2025",
-      score: 92,
-    },
-    {
-      id: 2,
-      exam: "Database Systems",
-      dateAttempted: "Apr 28, 2025",
-      score: 85,
-    },
-    {
-      id: 3,
-      exam: "UI/UX Design Principles",
-      dateAttempted: "Apr 20, 2025",
-      score: 79,
-    },
-    {
-      id: 4,
-      exam: "JavaScript Advanced Concepts",
-      dateAttempted: "Apr 15, 2025",
-      score: 95,
-    },
-    {
-      id: 5,
-      exam: "Mobile App Development",
-      dateAttempted: "Apr 10, 2025",
-      score: 65,
-    },
-  ];
+  const [examResults, setExamResults] = useState<ExamAttempt[]>([]);
+
+  useEffect(() => {
+    const fetchUserExamAttempts = async () => {
+      try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/exam-attempts/user-exam-attempts`, {
+          credentials: 'include',
+        });
+        const data = await response.json();
+        console.log('User Exam Attempts:', data);
+        setExamResults(data.attempts || []);
+      } catch (error) {
+        console.error('Error fetching user exam attempts:', error);
+      }
+    };
+
+    fetchUserExamAttempts();
+  }, []);
 
   return (
     <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
@@ -102,20 +67,20 @@ export default function ResultsPage() {
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                {examResults.map((result) => (
+                {examResults.map((attempt) => (
                   <div
-                    key={result.id}
+                    key={attempt.id}
                     className="flex flex-col space-y-2 rounded-lg border p-4 transition-all hover:bg-accent/50 md:flex-row md:items-center md:justify-between md:space-y-0"
                   >
                     <div className="space-y-1">
-                      <h3 className="font-medium">{result.exam}</h3>
+                      <h3 className="font-medium">{attempt.exam.title}</h3>
                       <p className="text-sm text-muted-foreground">
-                        Attempted on: {result.dateAttempted}
+                        Attempted on: {new Date(attempt.submittedAt).toLocaleDateString()}
                       </p>
                     </div>
                     <div className="text-center">
                       <p className="text-sm text-muted-foreground">Score</p>
-                      <p className="font-medium">{result.score}%</p>
+                      <p className="font-medium">{((attempt.score / attempt.totalMarks) * 100).toFixed(2)}%</p>
                     </div>
                   </div>
                 ))}

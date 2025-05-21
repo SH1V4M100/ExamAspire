@@ -108,6 +108,33 @@ export const ExamAttempts: CollectionConfig = {
           return Response.json({ error: 'Failed to fetch exam IDs' }, { status: 500 });
         }
       },
+    },
+    {
+      path: '/user-exam-attempts',
+      method: 'get',
+      handler: async (req) => {
+        if (!req.user) {
+          return Response.json({ error: 'Unauthorized' }, { status: 401 });
+        }
+    
+        try {
+          const result = await req.payload.find({
+            collection: 'exam-attempts',
+            where: {
+              user: {
+                equals: req.user.id,
+              },
+            },
+            depth: 1, // Adjust depth as needed to populate relationships
+            limit: 1000, // or higher if needed
+          });
+    
+          return Response.json({ attempts: result.docs });
+        } catch (err) {
+          console.error('Error fetching exam attempts:', err);
+          return Response.json({ error: 'Failed to fetch exam attempts' }, { status: 500 });
+        }
+      },
     }
     
   ]
