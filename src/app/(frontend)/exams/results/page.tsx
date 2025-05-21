@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Navbar } from "@/components/dashboard/navbar";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import React, { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
 
 interface ExamAttempt {
   id: number;

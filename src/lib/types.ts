@@ -52,7 +52,13 @@ export interface Exam {
   _status: string;
   slug: string;
 }
-
+export interface AnswersType {
+  [key: string]: UserAnswer;
+}
+export interface ExamData {
+  exam: Exam;
+  answers: AnswersType;
+}
 export interface UserAnswer {
   questionId: string;
   selectedOptionIds: string[];

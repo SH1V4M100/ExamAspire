@@ -125,7 +125,6 @@ export const ExamAttempts: CollectionConfig = {
                 equals: req.user.id,
               },
             },
-            depth: 1, // Adjust depth as needed to populate relationships
             limit: 1000, // or higher if needed
           });
     
