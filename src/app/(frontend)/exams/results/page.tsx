@@ -1,11 +1,6 @@
 'use client'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Search, Filter, Download } from "lucide-react";
 import { Navbar } from "@/components/dashboard/navbar";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import React, { useEffect, useState } from 'react';
@@ -53,10 +48,7 @@ export default function ResultsPage() {
                   Review your examination performance
                 </p>
               </div>
-              <Button variant="outline" className="shrink-0">
-                <Download className="mr-2 h-4 w-4" />
-                Export Results
-              </Button>
+              {/* Removed Export Results button */}
             </div>
 
             <Card>
@@ -70,7 +62,7 @@ export default function ResultsPage() {
                 {examResults.map((attempt) => (
                   <div
                     key={attempt.id}
-                    className="flex flex-col space-y-2 rounded-lg border p-4 transition-all hover:bg-accent/50 md:flex-row md:items-center md:justify-between md:space-y-0"
+                    className="flex flex-col space-y-4 rounded-lg border p-4 transition-all hover:bg-accent/50 md:flex-row md:items-center md:justify-between md:space-y-0"
                   >
                     <div className="space-y-1">
                       <h3 className="font-medium">{attempt.exam.title}</h3>
@@ -80,8 +72,13 @@ export default function ResultsPage() {
                     </div>
                     <div className="text-center">
                       <p className="text-sm text-muted-foreground">Score</p>
-                      <p className="font-medium">{((attempt.score / attempt.totalMarks) * 100).toFixed(2)}%</p>
+                      <p className="font-medium">
+                        {((attempt.score / attempt.totalMarks) * 100).toFixed(2)}%
+                      </p>
                     </div>
+                    <Button className="mt-2 md:mt-0">
+                      Evaluate
+                    </Button>
                   </div>
                 ))}
               </CardContent>
