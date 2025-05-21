@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Navbar } from "@/components/dashboard/navbar";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import React, { useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';  
 
 interface ExamAttempt {
   id: number;
@@ -18,7 +18,7 @@ interface ExamAttempt {
 
 export default function ResultsPage() {
   const [examResults, setExamResults] = useState<ExamAttempt[]>([]);
-
+  const router = useRouter();
   useEffect(() => {
     const fetchUserExamAttempts = async () => {
       try {
@@ -77,7 +77,8 @@ export default function ResultsPage() {
                         {((attempt.score / attempt.totalMarks) * 100).toFixed(2)}%
                       </p>
                     </div>
-                    <Button className="mt-2 md:mt-0">
+                    <Button className="mt-2 md:mt-0"
+                    onClick={() => router.push(`/exams/results/${attempt.id}`)}>
                       Evaluate
                     </Button>
                   </div>
