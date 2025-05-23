@@ -4,8 +4,9 @@ import ExamResult from '@/components/ExamResult';
 import { useParams } from 'next/navigation';
 import { ExamData } from '@/lib/types';
 
-function App() {
-  const { slug } = useParams();
+function ResultSlugPage() {
+  const { slug: rawSlug } = useParams();
+  const slug = Array.isArray(rawSlug) ? rawSlug[0] : rawSlug;
   const [examData, setExamData] = useState<ExamData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -44,9 +45,9 @@ function App() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <ExamResult examData={examData} />
+      <ExamResult examData={examData} slug={slug?slug:"1"}/>
     </div>
   );
 }
 
-export default App;
+export default ResultSlugPage;

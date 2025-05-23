@@ -134,7 +134,44 @@ export const ExamAttempts: CollectionConfig = {
           return Response.json({ error: 'Failed to fetch exam attempts' }, { status: 500 });
         }
       },
+    },
+    // ... existing code ...
+{
+  path: '/:id/scores', // :id is the exam ID
+  method: 'get',
+  handler: async (req) => {
+    const examId = req.routeParams?.id as number;
+
+    try {
+      // Fetch the exam to get the endDate
+      const exam = await req.payload.findByID({
+        collection: 'exams',
+        id: examId,
+      });
+
+      const result = await req.payload.find({
+        collection: 'exam-attempts',
+        where: {
+          exam: {
+            equals: examId,
+          },
+          submittedAt: {
+            less_than: exam.endDate, // Use the endDate from the exam
+          },
+        },
+        select: {
+          user: true, // ✅ Return the user ID
+          score: true, // ✅ Return the score
+        },
+        limit: 1000, // or higher if needed
+      });
+
+      return Response.json({ scores: result.docs.map(doc => ({ user: doc.user, score: doc.score })) });
+    } catch (err) {
+      console.error('Error fetching scores:', err);
+      return Response.json({ error: 'Failed to fetch scores' }, { status: 500 });
     }
-    
+  },
+},
   ]
 };

@@ -8,9 +8,10 @@ import { ExamData } from '../lib/types';
 
 interface ExamResultProps {
   examData: ExamData;
+  slug: string;
 }
 
-const ExamResult: React.FC<ExamResultProps> = ({ examData }) => {
+const ExamResult: React.FC<ExamResultProps> = ({ examData, slug }) => {
   const [activeTab, setActiveTab] = useState<'results' | 'leaderboard'>('results');
   
   // Calculate total score
@@ -71,7 +72,7 @@ const ExamResult: React.FC<ExamResultProps> = ({ examData }) => {
               <SectionResults examData={examData} />
             </div>
           ) : (
-            <Leaderboard currentScore={score.percentage} />
+            <Leaderboard currentScore={score.percentage} slug={(examData.exam.id).toString()}/>
           )}
         </div>
       </div>
