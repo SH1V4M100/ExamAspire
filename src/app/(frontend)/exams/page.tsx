@@ -13,7 +13,7 @@ export default function Home() {
       try {
         const [examsRes, attemptsRes] = await Promise.all([
           fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/exams`, {
-            credentials: 'include', // optional if CORS
+            credentials: 'include', 
           }),
           fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/exam-attempts/my-exam-ids`, {
             credentials: 'include',

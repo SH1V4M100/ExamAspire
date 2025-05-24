@@ -16,7 +16,10 @@ interface ExamCardProps {
 export function ExamCard({ exam }: ExamCardProps) {
   const router = useRouter();
   const status = getExamStatus(exam);
-  const isDisabled = status === 'upcoming' || status === 'expired';
+  const now = new Date();
+  const isDisabled = 
+  status === 'upcoming' || 
+  (exam.attempted && status==='active'); // new condition here
   
   const handleExamAction = () => {
     // Navigate to the exam attempt page
