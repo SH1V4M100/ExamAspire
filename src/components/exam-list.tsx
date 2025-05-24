@@ -21,7 +21,7 @@ export function ExamList({ exams, attemptedExamIds }: ExamListProps) {
 
   return (
     <div className="space-y-6 w-full">
-      <ExamFilter exams={exams} onFilterChange={setFilteredExams} />
+      <ExamFilter exams={exams} attemptedExamIds={attemptedExamIds} onFilterChange={setFilteredExams} />
       
       {isEmpty ? (
         <motion.div 

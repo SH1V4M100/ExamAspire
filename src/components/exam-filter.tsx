@@ -1,6 +1,5 @@
 "use client";
-
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { 
@@ -11,15 +10,16 @@ import {
   SelectValue 
 } from "@/components/ui/select";
 import { Search, Filter } from "lucide-react";
-import { Exam, ExamStatus } from "@/lib/types";
+import { Exam } from "@/lib/types";
 import { getExamStatus } from "@/lib/utils";
 
 interface ExamFilterProps {
   exams: Exam[];
+  attemptedExamIds: number[];
   onFilterChange: (filtered: Exam[]) => void;
 }
 
-export function ExamFilter({ exams, onFilterChange }: ExamFilterProps) {
+export function ExamFilter({ exams, attemptedExamIds, onFilterChange }: ExamFilterProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [attemptedFilter, setAttemptedFilter] = useState<string>("all");
@@ -42,10 +42,13 @@ export function ExamFilter({ exams, onFilterChange }: ExamFilterProps) {
       );
     }
     
-    // Apply attempted filter
+    // Apply attempted filter using attemptedExamIds
     if (attemptedFilter !== "all") {
+      //console.log(attemptedFilter);
       const isAttempted = attemptedFilter === "attempted";
-      filtered = filtered.filter(exam => exam.attempted === isAttempted);
+      filtered = filtered.filter(exam => 
+        isAttempted ? attemptedExamIds.includes(exam.id) : !attemptedExamIds.includes(exam.id)
+      );
     }
     
     onFilterChange(filtered);
@@ -53,19 +56,21 @@ export function ExamFilter({ exams, onFilterChange }: ExamFilterProps) {
   
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
-    setTimeout(applyFilters, 300);
+    //setTimeout(applyFilters, 300);
   };
   
   const handleStatusChange = (value: string) => {
     setStatusFilter(value);
-    setTimeout(applyFilters, 100);
+    //setTimeout(applyFilters, 100);
   };
-  
+
   const handleAttemptedChange = (value: string) => {
     setAttemptedFilter(value);
-    setTimeout(applyFilters, 100);
+    //setTimeout(applyFilters, 100);
   };
-  
+  useEffect(() => {
+    applyFilters();
+  }, [attemptedFilter, searchQuery, statusFilter]);
   const resetFilters = () => {
     setSearchQuery("");
     setStatusFilter("all");
