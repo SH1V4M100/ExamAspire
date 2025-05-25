@@ -32,6 +32,30 @@ export const ExamAttempts: CollectionConfig = {
       required: true,
     },
     {
+      name: 'physicsScore',
+      type: 'number',
+    },
+    {
+      name: 'physicsTotal',
+      type: 'number',
+    },
+    {
+      name: 'chemistryScore',
+      type: 'number',
+    },
+    {
+      name: 'chemistryTotal',
+      type: 'number',
+    },
+    {
+      name: 'mathsScore',
+      type: 'number',
+    },
+    {
+      name: 'mathsTotal',
+      type: 'number',
+    },
+    {
       name: 'timeSpent',
       type: 'number', // in seconds
       required: true,
@@ -45,35 +69,41 @@ export const ExamAttempts: CollectionConfig = {
   endpoints: [
     {
       path: '/:id/submit', // :id is the exam ID
-      method: 'post',
-      handler: async (req) => {
-        if (!req.user) {
-          return Response.json({ error: 'Unauthorized' });
-        }
+  method: 'post',
+  handler: async (req) => {
+    if (!req.user) {
+      return Response.json({ error: 'Unauthorized' });
+    }
 
-        const examId = req.routeParams?.id as number;
-        const { answers, timeSpent, score, totalMarks, metadata } = await req.json?.();
+    const examId = req.routeParams?.id as number;
+    const { answers, timeSpent, score, totalMarks, physicsScore, physicsTotal, chemistryScore, chemistryTotal, mathsScore, mathsTotal } = await req.json?.();
 
-        try {
-          const createdAttempt = await req.payload.create({
-            collection: 'exam-attempts',
-            data: {
-              user: req.user.id,
-              exam: Number(examId),
-              answers,
-              timeSpent,
-              score,
-              totalMarks,
-              submittedAt: new Date().toISOString(),
-            },
-          });
+    try {
+      const createdAttempt = await req.payload.create({
+        collection: 'exam-attempts',
+        data: {
+          user: req.user.id,
+          exam: Number(examId),
+          answers,
+          timeSpent,
+          score,
+          totalMarks,
+          physicsScore,
+          physicsTotal,
+          chemistryScore,
+          chemistryTotal,
+          mathsScore,
+          mathsTotal,
+          submittedAt: new Date().toISOString(),
+        },
+      });
 
-          return Response.json(createdAttempt);
-        } catch (err) {
-          console.error('Error creating exam attempt:', err);
-          return Response.json({ error: 'Failed to submit exam attempt' });
-        }
-      },
+      return Response.json(createdAttempt);
+    } catch (err) {
+      console.error('Error creating exam attempt:', err);
+      return Response.json({ error: 'Failed to submit exam attempt' });
+    }
+    },
     },
     {
       path: '/my-exam-ids',

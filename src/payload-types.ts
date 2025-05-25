@@ -640,6 +640,12 @@ export interface ExamAttempt {
     | null;
   score: number;
   totalMarks: number;
+  physicsScore?: number | null;
+  physicsTotal?: number | null;
+  chemistryScore?: number | null;
+  chemistryTotal?: number | null;
+  mathsScore?: number | null;
+  mathsTotal?: number | null;
   timeSpent: number;
   submittedAt: string;
   updatedAt: string;
@@ -1133,6 +1139,12 @@ export interface ExamAttemptsSelect<T extends boolean = true> {
   answers?: T;
   score?: T;
   totalMarks?: T;
+  physicsScore?: T;
+  physicsTotal?: T;
+  chemistryScore?: T;
+  chemistryTotal?: T;
+  mathsScore?: T;
+  mathsTotal?: T;
   timeSpent?: T;
   submittedAt?: T;
   updatedAt?: T;

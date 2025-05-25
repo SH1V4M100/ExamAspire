@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { Exam, ExamAttemptState, UserAnswer } from '@/lib/types';
 import { saveExamState, loadExamState, clearExamState } from '@/lib/utils';
-
+type Subject = 'physics' | 'chemistry' | 'maths';
 export const useExamState = (exam: Exam) => {
   const initialState: ExamAttemptState = useMemo(() => {
     const savedState = loadExamState(exam.id);
@@ -179,85 +179,124 @@ export const useExamState = (exam: Exam) => {
   };
 
   // Update the submitExam function in useExamState.ts
-const submitExam = async () => {
-  try {
-    // Calculate score based on answers
-    let score = 0;
-    let totalMarks = 0;
-
-    // Get all questions from all sections
-    const allQuestions = exam.sections.flatMap(section => 
-      section.questions.map(question => ({
-        ...question,
-        sectionId: section.id
-      }))
-    );
-    console.log('Answers:', examState.answers);
-    // Calculate score for each question
-    allQuestions.forEach(question => {
-      const userAnswer = examState.answers[question.id];
-      const correctOptions = question.options
-        .filter(opt => opt.isCorrect)
-        .map(opt => opt.id);
-      console.log('Correct Options:', correctOptions);
-      console.log('User Answer:', userAnswer ? userAnswer.selectedOptionIds : 'No answer');
-
-      const isCorrect = userAnswer && userAnswer.selectedOptionIds && 
-                       JSON.stringify([...userAnswer.selectedOptionIds].sort()) === 
-                       JSON.stringify([...correctOptions].sort());
-      //marking logic based on question type
-      switch (question.questionType) {
-      case 'single':
-        // +4 for correct, -1 for incorrect
-        if (userAnswer && userAnswer.selectedOptionIds) {
-          score += isCorrect ? 4 : -1;
-        }
-        totalMarks += 4; // Max marks for single correct
-        break;
+  const submitExam = async () => {
+    const subjectScores: Record<Subject, { score: number; total: number }> = {
+      physics: { score: 0, total: 0 },
+      chemistry: { score: 0, total: 0 },
+      maths: { score: 0, total: 0 }
+    };
+    try {
+      let score = 0;
+      let totalMarks = 0;
+  
+      const allQuestions = exam.sections.flatMap(section =>
+        section.questions.map(question => ({
+          ...question,
+          sectionId: section.id,
+          subject: section.subject.toLowerCase() as Subject// Ensure lowercase keys match `subjectScores`
+        }))
+      );
+  
+      allQuestions.forEach(question => {
+        const userAnswer = examState.answers[question.id];
+        const correctOptions = question.options
+          .filter(opt => opt.isCorrect)
+          .map(opt => opt.id);
+  
+        const isCorrect = userAnswer && userAnswer.selectedOptionIds &&
+          JSON.stringify([...userAnswer.selectedOptionIds].sort()) ===
+          JSON.stringify([...correctOptions].sort());
+  
+        const subjectKey = question.subject as Subject; // physics / chemistry / maths
+  
+        switch (question.questionType) {
+          case 'single':
+            if (userAnswer && userAnswer.selectedOptionIds) {
+              const delta = isCorrect ? 4 : -1;
+              score += delta;
+              subjectScores[subjectKey].score += delta;
+            }
+            totalMarks += 4;
+            subjectScores[subjectKey].total += 4;
+            break;
         
-      case 'multi':
-        if (userAnswer && userAnswer.selectedOptionIds) {
-          score += isCorrect ? 4 : -1;
-        }
-        totalMarks += 4; // Max marks for single correct
-        break;
-      case 'integer':
-        // +4 for correct, 0 for incorrect
-        if (isCorrect) {
-          score += 4;
-        }
-        totalMarks += 4; // Max marks for multi/integer
-        break;
+          case 'multi':
+            totalMarks += 4;
+            subjectScores[subjectKey].total += 4;
         
-      default:
-        console.warn(`Unknown question type: ${question.questionType}`);
-        break;
-    }
-  });
-
-    // Ensure score doesn't go below 0
-    score = Math.max(0, score);
-    console.log('Calculated Score:', score);
-    console.log('Total Marks:', totalMarks);
-    // Submit to backend
-    const response = await fetch(`/api/exam-attempts/${exam.id}/submit`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
+            if (userAnswer && userAnswer.selectedOptionIds) {
+              const selected = userAnswer.selectedOptionIds;
+              const correctSet = new Set(correctOptions);
+              const selectedSet = new Set(selected);
+        
+              const hasIncorrect = selected.some(id => !correctSet.has(id));
+              const correctSelected = selected.filter(id => correctSet.has(id)).length;
+              const totalCorrect = correctOptions.length;
+        
+              if (hasIncorrect) {
+                score -= 1;
+                subjectScores[subjectKey].score -= 1;
+              } else if (correctSelected === totalCorrect) {
+                score += 4;
+                subjectScores[subjectKey].score += 4;
+              } else if (correctSelected > 0) {
+                const partialMarks = (2 * correctSelected) / totalCorrect;
+                score += partialMarks;
+                subjectScores[subjectKey].score += partialMarks;
+              }
+              // else no marks if nothing selected
+            }
+            break;
+        
+          case 'integer':
+            if (isCorrect) {
+              score += 4;
+              subjectScores[subjectKey].score += 4;
+            }
+            totalMarks += 4;
+            subjectScores[subjectKey].total += 4;
+            break;
+        
+          default:
+            console.warn(`Unknown question type: ${question.questionType}`);
+            break;
+        }
+        
+      });
+  
+      // Ensure score and subject scores are non-negative
+      score = Math.max(0, score);
+      for (const key of Object.keys(subjectScores) as Subject[]) {
+        subjectScores[key].score = Math.max(0, subjectScores[key].score);
+      }
+  
+      // Prepare submission payload
+      const payload = {
         answers: examState.answers,
         timeSpent: exam.duration * 60 - remainingTime,
         score,
-        totalMarks
-      }),
-      credentials: 'include'
-    });
-
-    if (!response.ok) {
-      throw new Error('Failed to submit exam');
-    }
-
+        totalMarks,
+        physicsScore: subjectScores.physics.score,
+        physicsTotal: subjectScores.physics.total,
+        chemistryScore: subjectScores.chemistry.score,
+        chemistryTotal: subjectScores.chemistry.total,
+        mathsScore: subjectScores.maths.score,
+        mathsTotal: subjectScores.maths.total
+      };
+  
+      const response = await fetch(`/api/exam-attempts/${exam.id}/submit`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+        credentials: 'include'
+      });
+  
+      if (!response.ok) {
+        throw new Error('Failed to submit exam');
+      }
+  
     // Clear local state
     clearExamState();
     return "await response.json();"
