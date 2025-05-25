@@ -1,7 +1,7 @@
-import { CollectionConfig } from 'payload'
-import { authenticated } from '../access/authenticated'
-import { authenticatedOrPublished } from '../access/authenticatedOrPublished'
-import { slugField } from '@/fields/slug'
+import { CollectionConfig } from 'payload';
+import { authenticated } from '../access/authenticated';
+import { authenticatedOrPublished } from '../access/authenticatedOrPublished';
+import { slugField } from '@/fields/slug';
 
 export const Exams: CollectionConfig = {
   slug: 'exams',
@@ -173,6 +173,31 @@ export const Exams: CollectionConfig = {
     },
     ...slugField(),
   ],
+  endpoints: [
+    {
+      path: '/count-upcoming-exams',
+      method: 'get',
+      handler: async (req) => {
+        try {
+          const currentDate = new Date();
+          const upcomingExamsCount = await req.payload.find({
+            collection: 'exams',
+            where: {
+              startDate: {
+                greater_than: currentDate,
+              },
+            },
+            limit: 0,
+          });
+
+          return Response.json({ count: upcomingExamsCount.totalDocs });
+        } catch (err) {
+          console.error('Error fetching upcoming exam count:', err);
+          return Response.json({ error: 'Failed to fetch upcoming exam count' }, { status: 500 });
+        }
+      },
+    },
+  ],
 }
 
-export default Exams
+export default Exams;
