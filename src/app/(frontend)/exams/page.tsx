@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { ExamList } from '@/components/exam-list';
 import { ThemeToggle } from '@/components/ui/theme-toggle';
-
+import { stringify } from 'qs-esm';
 export default function Home() {
   const [exams, setExams] = useState([]);
   const [attemptedExamIds, setAttemptedExamIds] = useState<number[]>([]);
@@ -11,14 +11,25 @@ export default function Home() {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        const examQuery = stringify(
+          {
+            where: {
+              _status: {
+                equals: 'published',
+              },
+            },
+          },
+          { addQueryPrefix: true }
+        );
+  
         const [examsRes, attemptsRes] = await Promise.all([
-          fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/exams`, {
-            credentials: 'include', 
+          fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/exams${examQuery}`, {
+            credentials: 'include',
           }),
           fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/exam-attempts/my-exam-ids`, {
             credentials: 'include',
           }),
-        ]);
+        ]);  
 
         const examsData = await examsRes.json();
         const attemptedData = await attemptsRes.json();

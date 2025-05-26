@@ -20,18 +20,23 @@ export function QuickActions() {
           <Calendar className="mr-2 h-4 w-4" />
           View Exam Schedule
         </Button>
-        <Button variant="outline" className="justify-start" size="sm">
-          <Clock className="mr-2 h-4 w-4" />
-          Set Study Timer
-        </Button>
-        <Button variant="outline" className="justify-start" size="sm">
-          <FileText className="mr-2 h-4 w-4" />
-          View Study Materials
-        </Button>
-        <Button variant="outline" className="justify-start" size="sm">
+        <a href="https://drive.google.com/drive/folders/1fxRP1gts5ZHA5RjZdrkqpiOyZEV_FI1P"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <Button variant="outline" className="justify-start" size="sm">
+            <FileText className="mr-2 h-4 w-4" />
+            View Study Materials
+          </Button>
+        </a>
+        <a href="/exams/results"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+        <Button variant="outline" className="justify-start" size="sm" onClick={() => window.location.href = '/exams/results'}>
           <History className="mr-2 h-4 w-4" />
           Past Exam Reviews
-        </Button>
+        </Button> </a>
       </CardContent>
     </Card>
   );
