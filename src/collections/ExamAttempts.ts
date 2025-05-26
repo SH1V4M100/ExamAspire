@@ -203,5 +203,41 @@ export const ExamAttempts: CollectionConfig = {
     }
   },
 },
+{
+  path: '/user-dashboard-scores',
+  method: 'get',
+  handler: async (req) => {
+    if (!req.user) {
+      return Response.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    try {
+      const result = await req.payload.find({
+        collection: 'exam-attempts',
+        where: {
+          user: {
+            equals: req.user.id,
+          },
+        },
+        select: {
+          score: true,
+          totalMarks: true,
+          physicsScore: true,
+          physicsTotal: true,
+          chemistryScore: true,
+          chemistryTotal: true,
+          mathsScore: true,
+          mathsTotal: true,
+        },
+        limit: 1000, // or higher if needed
+      });
+
+      return Response.json({ scores: result.docs });
+    } catch (err) {
+      console.error('Error fetching user attempts scores:', err);
+      return Response.json({ error: 'Failed to fetch user attempts scores' }, { status: 500 });
+    }
+  },
+},
   ]
 };
