@@ -1,47 +1,98 @@
 'use client';
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { useEffect, useState } from 'react';
+import { stringify } from 'qs-esm';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle
+} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Calendar, Clock, Users } from "lucide-react";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger
+} from "@/components/ui/tabs";
+import { Calendar, Clock } from "lucide-react";
 
-// Dummy data for upcoming exams
-const upcomingExams = [
-  {
-    id: 1,
-    title: "Advanced Mathematics",
-    date: "May 15, 2025",
-    time: "10:00 AM",
-    participants: 42,
-    status: "scheduled",
-  },
-  {
-    id: 2,
-    title: "Computer Science Fundamentals",
-    date: "May 18, 2025",
-    time: "2:00 PM",
-    participants: 38,
-    status: "scheduled",
-  },
-  {
-    id: 3,
-    title: "Data Structures & Algorithms",
-    date: "May 20, 2025",
-    time: "11:30 AM",
-    participants: 35,
-    status: "draft",
-  },
-  {
-    id: 4,
-    title: "Introduction to AI",
-    date: "May 25, 2025",
-    time: "9:00 AM",
-    participants: 51,
-    status: "scheduled",
-  },
-];
+type Exam = {
+  id: number;
+  title: string;
+  startDate: string;
+  _status: 'published' | 'draft';
+};
 
 export function UpcomingExams() {
+  const [exams, setExams] = useState<Exam[]>([]);
+  const [tab, setTab] = useState<'all' | 'scheduled' | 'draft'>('all');
+
+  useEffect(() => {
+    const fetchExams = async () => {
+      try {
+        const now = new Date().toISOString();
+
+        const query = stringify({
+          where: {
+            startDate: { greater_than: now }
+          }
+        }, { addQueryPrefix: true });
+
+        const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/exams${query}`, {
+          credentials: 'include',
+        });
+
+        const data = await res.json();
+        setExams(data.docs);
+      } catch (error) {
+        console.error('Failed to fetch exams:', error);
+      }
+    };
+
+    fetchExams();
+  }, []);
+
+  const getFilteredExams = () => {
+    if (tab === 'scheduled') return exams.filter(e => e._status === 'published');
+    if (tab === 'draft') return exams.filter(e => e._status === 'draft');
+    return exams;
+  };
+
+  const renderExamCard = (exam: Exam) => (
+    <div
+      key={exam.id}
+      className="flex flex-col space-y-2 rounded-md border p-4 transition-all hover:bg-accent/50"
+    >
+      <div className="flex items-center justify-between">
+        <h3 className="font-medium">{exam.title}</h3>
+        <Badge variant={exam._status === "published" ? "default" : "secondary"}>
+          {exam._status === "published" ? "Scheduled" : "Draft"}
+        </Badge>
+      </div>
+      <div className="flex flex-col space-y-2 text-sm text-muted-foreground sm:flex-row sm:space-x-4 sm:space-y-0">
+        <div className="flex items-center">
+          <Calendar className="mr-1 h-4 w-4" />
+          {new Date(exam.startDate).toLocaleDateString(undefined, {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+          })}
+        </div>
+        <div className="flex items-center">
+          <Clock className="mr-1 h-4 w-4" />
+          {new Date(exam.startDate).toLocaleTimeString(undefined, {
+            hour: '2-digit',
+            minute: '2-digit',
+          })}
+        </div>
+      </div>
+    </div>
+  );
+
+  const filteredExams = getFilteredExams();
+
   return (
     <Card className="col-span-full xl:col-span-2">
       <CardHeader>
@@ -51,98 +102,20 @@ export function UpcomingExams() {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <Tabs defaultValue="all" className="space-y-4">
+        <Tabs value={tab} onValueChange={(val) => setTab(val as any)} className="space-y-4">
           <TabsList>
             <TabsTrigger value="all">All</TabsTrigger>
             <TabsTrigger value="scheduled">Scheduled</TabsTrigger>
             <TabsTrigger value="draft">Draft</TabsTrigger>
           </TabsList>
           <TabsContent value="all" className="space-y-4">
-            {upcomingExams.map((exam) => (
-              <div
-                key={exam.id}
-                className="flex flex-col space-y-2 rounded-md border p-4 transition-all hover:bg-accent/50"
-              >
-                <div className="flex items-center justify-between">
-                  <h3 className="font-medium">{exam.title}</h3>
-                  <Badge variant={exam.status === "scheduled" ? "default" : "secondary"}>
-                    {exam.status === "scheduled" ? "Scheduled" : "Draft"}
-                  </Badge>
-                </div>
-                <div className="flex flex-col space-y-2 text-sm text-muted-foreground sm:flex-row sm:space-x-4 sm:space-y-0">
-                  <div className="flex items-center">
-                    <Calendar className="mr-1 h-4 w-4" />
-                    {exam.date}
-                  </div>
-                  <div className="flex items-center">
-                    <Clock className="mr-1 h-4 w-4" />
-                    {exam.time}
-                  </div>
-                  <div className="flex items-center">
-                    <Users className="mr-1 h-4 w-4" />
-                    {exam.participants} students
-                  </div>
-                </div>
-              </div>
-            ))}
+            {tab === 'all' && filteredExams.map(renderExamCard)}
           </TabsContent>
           <TabsContent value="scheduled" className="space-y-4">
-            {upcomingExams
-              .filter((exam) => exam.status === "scheduled")
-              .map((exam) => (
-                <div
-                  key={exam.id}
-                  className="flex flex-col space-y-2 rounded-md border p-4 transition-all hover:bg-accent/50"
-                >
-                  <div className="flex items-center justify-between">
-                    <h3 className="font-medium">{exam.title}</h3>
-                    <Badge>Scheduled</Badge>
-                  </div>
-                  <div className="flex flex-col space-y-2 text-sm text-muted-foreground sm:flex-row sm:space-x-4 sm:space-y-0">
-                    <div className="flex items-center">
-                      <Calendar className="mr-1 h-4 w-4" />
-                      {exam.date}
-                    </div>
-                    <div className="flex items-center">
-                      <Clock className="mr-1 h-4 w-4" />
-                      {exam.time}
-                    </div>
-                    <div className="flex items-center">
-                      <Users className="mr-1 h-4 w-4" />
-                      {exam.participants} students
-                    </div>
-                  </div>
-                </div>
-              ))}
+            {tab === 'scheduled' && filteredExams.map(renderExamCard)}
           </TabsContent>
           <TabsContent value="draft" className="space-y-4">
-            {upcomingExams
-              .filter((exam) => exam.status === "draft")
-              .map((exam) => (
-                <div
-                  key={exam.id}
-                  className="flex flex-col space-y-2 rounded-md border p-4 transition-all hover:bg-accent/50"
-                >
-                  <div className="flex items-center justify-between">
-                    <h3 className="font-medium">{exam.title}</h3>
-                    <Badge variant="secondary">Draft</Badge>
-                  </div>
-                  <div className="flex flex-col space-y-2 text-sm text-muted-foreground sm:flex-row sm:space-x-4 sm:space-y-0">
-                    <div className="flex items-center">
-                      <Calendar className="mr-1 h-4 w-4" />
-                      {exam.date}
-                    </div>
-                    <div className="flex items-center">
-                      <Clock className="mr-1 h-4 w-4" />
-                      {exam.time}
-                    </div>
-                    <div className="flex items-center">
-                      <Users className="mr-1 h-4 w-4" />
-                      {exam.participants} students
-                    </div>
-                  </div>
-                </div>
-              ))}
+            {tab === 'draft' && filteredExams.map(renderExamCard)}
           </TabsContent>
         </Tabs>
       </CardContent>
