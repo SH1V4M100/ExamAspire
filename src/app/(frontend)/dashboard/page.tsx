@@ -73,20 +73,19 @@ export default function DashboardPage() {
           title="Upcoming Exams"
           value={upcomingExamsCount.toString()}
           icon={<GraduationCap className="h-4 w-4" />}
-          description="Scheduled this week"
+          description="Best of luck!"
         />
         <StatCard
           title="Completed Exams"
           value={completedExamsCount.toString()}
           icon={<CheckCircle className="h-4 w-4" />}
-          description="This semester"
+          description="This year"
         />
         <StatCard
           title="Average Score"
           value={`${averageScore.toFixed(2)}%`}
           icon={<BookOpen className="h-4 w-4" />}
           description="Across all subjects"
-          trend={{ value: 5, isPositive: true }}
         />
         {/* <StatCard
           title="Study Time"

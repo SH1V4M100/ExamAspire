@@ -20,8 +20,7 @@ export function StatCard({
   value, 
   description, 
   icon, 
-  className,
-  trend
+  className
 }: StatCardProps) {
   return (
     <Card className={cn("overflow-hidden", className)}>
@@ -33,19 +32,6 @@ export function StatCard({
         <div className="text-2xl font-bold">{value}</div>
         {description && (
           <p className="text-xs text-muted-foreground mt-1">{description}</p>
-        )}
-        {trend && (
-          <div className="mt-2 flex items-center text-xs">
-            <span 
-              className={cn(
-                "mr-1",
-                trend.isPositive ? "text-emerald-500" : "text-rose-500"
-              )}
-            >
-              {trend.isPositive ? "↑" : "↓"} {Math.abs(trend.value)}%
-            </span>
-            <span className="text-muted-foreground">vs last month</span>
-          </div>
         )}
       </CardContent>
     </Card>

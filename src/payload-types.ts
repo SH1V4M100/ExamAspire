@@ -77,6 +77,7 @@ export interface Config {
     exams: Exam;
     'exam-attempts': ExamAttempt;
     forms: Form;
+    notifications: Notification;
     'payload-jobs': PayloadJob;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -93,6 +94,7 @@ export interface Config {
     exams: ExamsSelect<false> | ExamsSelect<true>;
     'exam-attempts': ExamAttemptsSelect<false> | ExamAttemptsSelect<true>;
     forms: FormsSelect<false> | FormsSelect<true>;
+    notifications: NotificationsSelect<false> | NotificationsSelect<true>;
     'payload-jobs': PayloadJobsSelect<false> | PayloadJobsSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -653,6 +655,16 @@ export interface ExamAttempt {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "notifications".
+ */
+export interface Notification {
+  id: number;
+  message: string;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-jobs".
  */
 export interface PayloadJob {
@@ -785,6 +797,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'forms';
         value: number | Form;
+      } | null)
+    | ({
+        relationTo: 'notifications';
+        value: number | Notification;
       } | null)
     | ({
         relationTo: 'payload-jobs';
@@ -1156,6 +1172,15 @@ export interface ExamAttemptsSelect<T extends boolean = true> {
  */
 export interface FormsSelect<T extends boolean = true> {
   title?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "notifications_select".
+ */
+export interface NotificationsSelect<T extends boolean = true> {
+  message?: T;
   updatedAt?: T;
   createdAt?: T;
 }

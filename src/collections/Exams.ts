@@ -130,7 +130,7 @@ export const Exams: CollectionConfig = {
               name: 'options',
               type: 'array',
               required: true,
-              minRows: 2,
+              minRows: 1,
               maxRows: 10,
               fields: [
                 {
@@ -173,6 +173,21 @@ export const Exams: CollectionConfig = {
     },
     ...slugField(),
   ],
+  hooks: {
+    afterChange: [
+      async ({ doc, operation, req }) => {
+        if (operation === 'create'||operation==='update' && doc._status === 'published') {
+          console.log('afterChange hook called')
+          await req.payload.create({
+            collection: 'notifications',
+            data: {
+              message: `New exam "${doc.title}" has been published.`,
+            },
+          });
+        }
+      },
+    ],
+  },
   endpoints: [
     {
       path: '/count-upcoming-exams',

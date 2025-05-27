@@ -1,8 +1,9 @@
 'use client';
 
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
-import { GraduationCap, BarChart3, User, Bell, Settings } from 'lucide-react';
+import { GraduationCap, BarChart3, User, Bell } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { ThemeToggle } from '@/components/ui/theme-toggle';
 import { Button } from '@/components/ui/button';
@@ -35,6 +36,21 @@ const navItems = [
 
 export function Navbar() {
   const pathname = usePathname();
+  const [notifications, setNotifications] = useState<{ id: number; message: string }[]>([]);
+
+  useEffect(() => {
+    async function fetchNotifications() {
+      try {
+        const res = await fetch('http://localhost:3000/api/notifications');
+        const data = await res.json();
+        setNotifications(data.docs.slice(0, 5)); // Limit to 5 messages
+      } catch (error) {
+        console.error('Failed to fetch notifications:', error);
+      }
+    }
+
+    fetchNotifications();
+  }, []);
 
   return (
     <nav className="sticky top-0 z-30 flex h-16 w-full items-center justify-between border-b bg-background/95 px-4 backdrop-blur-sm transition-all md:px-6">
@@ -68,13 +84,37 @@ export function Navbar() {
       </div>
 
       <div className="flex items-center gap-4">
-        <Button size="icon" variant="ghost" className="relative">
-          <Bell className="h-5 w-5" />
-          <span className="absolute right-1.5 top-1.5 flex h-2 w-2 rounded-full bg-destructive"></span>
-        </Button>
+        {/* Notifications Dropdown */}
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button size="icon" variant="ghost" className="relative">
+              <Bell className="h-5 w-5" />
+              {notifications.length > 0 && (
+                <span className="absolute right-1.5 top-1.5 flex h-2 w-2 rounded-full bg-destructive"></span>
+              )}
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-64">
+            <DropdownMenuLabel>Notifications</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            {notifications.length > 0 ? (
+              notifications.map((notif) => (
+                <DropdownMenuItem key={notif.id}>
+                  📢 {notif.message}
+                </DropdownMenuItem>
+              ))
+            ) : (
+              <DropdownMenuItem className="text-muted-foreground text-sm">
+                No new notifications
+              </DropdownMenuItem>
+            )}
+          </DropdownMenuContent>
+        </DropdownMenu>
 
+        {/* Theme Toggle */}
         <ThemeToggle />
 
+        {/* User Profile Dropdown */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button 
