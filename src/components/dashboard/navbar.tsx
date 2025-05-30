@@ -51,7 +51,24 @@ export function Navbar() {
 
     fetchNotifications();
   }, []);
-
+  const handleLogout = async () => {
+    try {
+      const req = await fetch('/api/users/logout', {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const data = await req.json();
+      // Redirect to home page on successful logout
+      if (req.ok) {
+        window.location.href = '/';
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
   return (
     <nav className="sticky top-0 z-30 flex h-16 w-full items-center justify-between border-b bg-background/95 px-4 backdrop-blur-sm transition-all md:px-6">
       <div className="flex items-center gap-2 md:gap-4">
@@ -133,7 +150,7 @@ export function Navbar() {
             <DropdownMenuItem>Settings</DropdownMenuItem>
             <DropdownMenuItem>Help</DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>Log out</DropdownMenuItem>
+            <DropdownMenuItem onClick={handleLogout}>Log out</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>

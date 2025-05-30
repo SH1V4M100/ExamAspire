@@ -55,6 +55,9 @@ export default function Home() {
                 <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl">
                   Built with modern technology and student needs in mind
                 </p>
+                <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl">
+                Mentored by the best - straight from Jadavpur University  
+                </p>
               </div>
               <div className="mx-auto grid max-w-5xl grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
                 <div className="flex flex-col items-center space-y-2 rounded-lg border bg-background p-6 shadow-sm">
@@ -90,7 +93,7 @@ export default function Home() {
                   </div>
                   <h3 className="text-xl font-bold">Academic Support</h3>
                   <p className="text-sm text-muted-foreground">
-                    Direct access to faculty feedback and peer discussions
+                    Direct access to faculty announcements and peer performance
                   </p>
                 </div>
               </div>
@@ -106,12 +109,12 @@ export default function Home() {
                   Join Your Fellow Students
                 </h2>
                 <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl">
-                  Experience the future of academic assessment at Jadavpur University
+                  Academic support platform by students of Jadavpur University
                 </p>
               </div>
               <div className="mx-auto max-w-3xl space-y-4">
                 <p className="text-muted-foreground">
-                  ExamAspire is the official examination platform for Jadavpur University students, designed to provide a seamless and efficient examination experience. Join thousands of your peers who are already benefiting from our modern approach to academic assessment.
+                  ExamAspire is the official examination platform for WBJEE 2026 Test Series by InstruGuy, designed to provide a seamless and efficient examination experience. Join your peers who are already benefiting from our modern approach to academic assessment.
                 </p>
                 <Link href="/signup">
                   <Button size="lg">Get Started Today</Button>

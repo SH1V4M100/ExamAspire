@@ -239,5 +239,25 @@ export const ExamAttempts: CollectionConfig = {
     }
   },
 },
+{
+  path: '/recent',
+  method: 'get',
+  handler: async (req) => {
+    try {
+      const result = await req.payload.find({
+        collection: 'exam-attempts',
+        sort: '-submittedAt', // Descending order (most recent first)
+        limit: 5,
+        depth: 1,
+      });
+
+      return Response.json({ recentAttempts: result.docs });
+    } catch (err) {
+      console.error('Error fetching recent exam attempts:', err);
+      return Response.json({ error: 'Failed to fetch recent exam attempts' }, { status: 500 });
+    }
+  },
+}
+
   ]
 };
