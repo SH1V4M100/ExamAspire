@@ -12,10 +12,16 @@ export function QuickActions() {
         <CardDescription>Common tasks and activities</CardDescription>
       </CardHeader>
       <CardContent className="flex flex-col gap-2">
+      <a 
+          href="/exams/0/attempt"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
         <Button className="justify-start" size="sm">
           <BookOpen className="mr-2 h-4 w-4" />
           Start Practice Test
         </Button>
+        </a>
         <Button variant="outline" className="justify-start" size="sm">
           <Calendar className="mr-2 h-4 w-4" />
           View Exam Schedule
