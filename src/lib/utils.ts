@@ -34,10 +34,15 @@ export function getExamStatus(exam: Exam): ExamStatus {
   }
 }
 
-export function formatDate(date: Date | string): string {
-  // Convert string to Date if needed
+export function formatDate(date: Date | string | null | undefined): string {
+  if (!date) return 'Invalid date';
+
   const dateObj = typeof date === 'string' ? new Date(date) : date;
-  
+
+  if (!(dateObj instanceof Date) || isNaN(dateObj.getTime())) {
+    return 'Invalid date';
+  }
+
   return dateObj.toLocaleDateString('en-US', {
     month: 'short',
     day: 'numeric',

@@ -188,7 +188,12 @@ export const useExamState = (exam: Exam) => {
     try {
       let score = 0;
       let totalMarks = 0;
-  
+      // ✅ Skip actual submission if exam.id === 0
+      if (exam.id === 3) {
+        console.log('Skipping exam submission due to mock exam (id = 0)');
+        clearExamState();
+        return { success: true, message: 'Exam not submitted (mock mode).' };
+      }
       const allQuestions = exam.sections.flatMap(section =>
         section.questions.map(question => ({
           ...question,

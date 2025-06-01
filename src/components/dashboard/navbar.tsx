@@ -62,9 +62,7 @@ export function Navbar() {
       });
       const data = await req.json();
       // Redirect to home page on successful logout
-      if (req.ok) {
-        window.location.href = '/';
-      }
+      window.location.href = '/';
     } catch (err) {
       console.log(err);
     }

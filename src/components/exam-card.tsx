@@ -21,8 +21,8 @@ export function ExamCard({ exam }: ExamCardProps) {
   (exam.attempted && status==='active'); // new condition here
   
   const handleExamAction = () => {
-    // Navigate to the exam attempt page
-    router.push(`/exams/${exam.id}/attempt`);
+    // Open exam attempt in a new tab
+    window.open(`/exams/${exam.id}/attempt`, '_blank');
   };
 
   return (

@@ -33,7 +33,7 @@ export default function Home() {
                   Your Academic Success Starts Here
                 </h1>
                 <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl">
-                  A modern examination platform designed for students at Jadavpur University. Track your progress, access study materials, and excel in your academic journey.
+                  A modern examination platform designed for students aspiring for Engineering Entrance Examinations. Track your progress, access study materials, and excel in your academic journey.
                 </p>
               </div>
               <div className="space-x-4">
@@ -116,7 +116,7 @@ export default function Home() {
                 <p className="text-muted-foreground">
                   ExamAspire is the official examination platform for WBJEE 2026 Test Series by InstruGuy, designed to provide a seamless and efficient examination experience. Join your peers who are already benefiting from our modern approach to academic assessment.
                 </p>
-                <Link href="/signup">
+                <Link href="/signup" className="inline-block mt-4">
                   <Button size="lg">Get Started Today</Button>
                 </Link>
               </div>
