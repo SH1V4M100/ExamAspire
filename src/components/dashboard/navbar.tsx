@@ -33,24 +33,77 @@ const navItems = [
     icon: BarChart3,
   },
 ];
-
+type Notification = {
+  id: string;
+  message: string;
+  seenBy?: { id: string }[]; // Adjust to your actual user relationship shape
+};
+type usertype = {
+  id: string;
+  name: string;};
 export function Navbar() {
   const pathname = usePathname();
-  const [notifications, setNotifications] = useState<{ id: number; message: string }[]>([]);
-
+  const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [currentUser, setCurrentUser] = useState<usertype | null>(null);
+  const [hasUnseen, setHasUnseen] = useState(false);
   useEffect(() => {
-    async function fetchNotifications() {
+    async function fetchUser() {
       try {
-        const res = await fetch('http://localhost:3000/api/notifications');
+        const res = await fetch('/api/users/me', {
+          credentials: 'include',
+          headers: { 'Content-Type': 'application/json' },
+        });
+
         const data = await res.json();
-        setNotifications(data.docs.slice(0, 5)); // Limit to 5 messages
-      } catch (error) {
-        console.error('Failed to fetch notifications:', error);
+        setCurrentUser(data?.user || null);
+      } catch (err) {
+        console.error('Failed to fetch user:', err);
       }
     }
 
-    fetchNotifications();
+    fetchUser();
   }, []);
+
+  useEffect(() => {
+    if (!currentUser) return;
+  
+    async function fetchNotifications() {
+      try {
+        const res = await fetch('/api/notifications?limit=5', {
+          credentials: 'include',
+        });
+  
+        const data = await res.json();
+        setNotifications(data.docs || []);
+  
+        // Check if user has not seen any of the notifications
+        const unseen = data.docs.some((notif: Notification) =>
+          !(notif.seenBy || []).some((user) => user.id === currentUser?.id)
+        );
+  
+        setHasUnseen(unseen);
+      } catch (err) {
+        console.error('Failed to fetch notifications:', err);
+      }
+    }
+    fetchNotifications();
+  }, [currentUser]);
+
+  const handleDropdownOpen = async () => {
+    console.log('clicked')
+    if (!currentUser) return;
+  
+    try {
+      await fetch('/api/notifications/mark-seen', {
+        method: 'POST',
+        credentials: 'include',
+      });
+      setHasUnseen(false);
+    } catch (err) {
+      console.error('Failed to mark notifications as seen:', err);
+    }
+  };
+  
   const handleLogout = async () => {
     try {
       const req = await fetch('/api/users/logout', {
@@ -100,31 +153,37 @@ export function Navbar() {
 
       <div className="flex items-center gap-4">
         {/* Notifications Dropdown */}
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button size="icon" variant="ghost" className="relative">
-              <Bell className="h-5 w-5" />
-              {notifications.length > 0 && (
-                <span className="absolute right-1.5 top-1.5 flex h-2 w-2 rounded-full bg-destructive"></span>
-              )}
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-64">
-            <DropdownMenuLabel>Notifications</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            {notifications.length > 0 ? (
-              notifications.map((notif) => (
-                <DropdownMenuItem key={notif.id}>
-                  📢 {notif.message}
-                </DropdownMenuItem>
-              ))
-            ) : (
-              <DropdownMenuItem className="text-muted-foreground text-sm">
-                No new notifications
-              </DropdownMenuItem>
-            )}
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <DropdownMenu onOpenChange={(open) => {
+        if (open) {
+          handleDropdownOpen(); // Call your mark-as-seen logic here
+        }
+      }}>
+        <DropdownMenuTrigger asChild>
+        <button className="relative h-6 w-6">
+        <Bell className="h-5 w-5" />
+        {hasUnseen && (
+          <span className="absolute top-0 right-0 h-2 w-2 rounded-full bg-destructive" />
+        )}
+      </button>
+
+        </DropdownMenuTrigger>
+
+        <DropdownMenuContent align="end" className="w-64">
+    <DropdownMenuLabel>Notifications</DropdownMenuLabel>
+    <DropdownMenuSeparator />
+    {notifications.length > 0 ? (
+      notifications.map((notif) => (
+        <DropdownMenuItem key={notif.id}>
+          📢 {notif.message}
+        </DropdownMenuItem>
+      ))
+    ) : (
+      <DropdownMenuItem className="text-muted-foreground text-sm">
+        No new notifications
+      </DropdownMenuItem>
+    )}
+  </DropdownMenuContent>
+</DropdownMenu>
 
         {/* Theme Toggle */}
         <ThemeToggle />

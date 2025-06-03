@@ -660,6 +660,7 @@ export interface ExamAttempt {
 export interface Notification {
   id: number;
   message: string;
+  seenBy?: (number | User)[] | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -1181,6 +1182,7 @@ export interface FormsSelect<T extends boolean = true> {
  */
 export interface NotificationsSelect<T extends boolean = true> {
   message?: T;
+  seenBy?: T;
   updatedAt?: T;
   createdAt?: T;
 }
