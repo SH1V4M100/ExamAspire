@@ -1,7 +1,7 @@
 'use client'
 import React, { useEffect, useState } from 'react';
 import { ExamList } from '@/components/exam-list';
-import { ThemeToggle } from '@/components/ui/theme-toggle';
+// import { ThemeToggle } from '@/components/ui/theme-toggle';
 import { stringify } from 'qs-esm';
 export default function Home() {
   const [exams, setExams] = useState([]);
@@ -56,7 +56,7 @@ export default function Home() {
             <h1 className="text-3xl font-bold tracking-tight">Exam Portal</h1>
             <p className="text-muted-foreground mt-1">Browse and take your assigned examinations</p>
           </div>
-          <ThemeToggle />
+          {/* <ThemeToggle /> */}
         </header>
 
         <section className="mb-12">
