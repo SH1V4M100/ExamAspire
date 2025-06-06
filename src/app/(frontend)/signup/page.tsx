@@ -40,7 +40,7 @@ export default function SignUpPage() {
         throw new Error('Failed to create account');
       }
 
-      window.location.href = '/login';
+      window.location.href = '/';
     } catch (err) {
       setError('Failed to create account. Please try again.');
     } finally {
