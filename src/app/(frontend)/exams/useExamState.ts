@@ -189,7 +189,7 @@ export const useExamState = (exam: Exam) => {
       let score = 0;
       let totalMarks = 0;
       // ✅ Skip actual submission if exam.id === 0
-      if (exam.id === 3) {
+      if (exam.id === 0) {
         console.log('Skipping exam submission due to mock exam (id = 0)');
         clearExamState();
         return { success: true, message: 'Exam not submitted (mock mode).' };

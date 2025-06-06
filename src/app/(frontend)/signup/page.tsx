@@ -1,16 +1,11 @@
-'use client'
-import { Metadata } from "next";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { useState } from "react";
+'use client';
 
-// export const metadata: Metadata = {
-//   title: "Sign Up - ExamAspire",
-//   description: "Create your ExamAspire account",
-// };
+import { useState } from 'react';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Button } from '@/components/ui/button';
+import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card';
+import Link from 'next/link';
 
 export default function SignUpPage() {
   const [loading, setLoading] = useState(false);
@@ -25,12 +20,14 @@ export default function SignUpPage() {
     const data = {
       email: formData.get('email'),
       password: formData.get('password'),
-      name: `${formData.get('firstName')} ${formData.get('lastName')}`,
-      institution: 'Jadavpur University'
+      confirmPassword: formData.get('confirmPassword'),
+      firstName: formData.get('firstName'),
+      lastName: formData.get('lastName'),
+      institution: formData.get('institution'),
     };
 
     try {
-      const response = await fetch('/api/users', {
+      const response = await fetch('/api/users/send-signup-email', {
         method: 'POST',
         credentials: 'include',
         headers: {
@@ -43,7 +40,6 @@ export default function SignUpPage() {
         throw new Error('Failed to create account');
       }
 
-      // Redirect to login page on success
       window.location.href = '/login';
     } catch (err) {
       setError('Failed to create account. Please try again.');
@@ -51,6 +47,7 @@ export default function SignUpPage() {
       setLoading(false);
     }
   };
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-muted/50 px-4">
       <Card className="w-full max-w-md">
@@ -59,34 +56,38 @@ export default function SignUpPage() {
           <CardDescription>Enter your details to get started</CardDescription>
         </CardHeader>
         <CardContent>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="firstName">First Name</Label>
-              <Input id="firstName" name="firstName" placeholder="John" required />
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="firstName">First Name</Label>
+                <Input id="firstName" name="firstName" required />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="lastName">Last Name</Label>
+                <Input id="lastName" name="lastName" required />
+              </div>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="lastName">Last Name</Label>
-              <Input id="lastName" name="lastName" placeholder="Doe" required />
+              <Label htmlFor="institution">Institution</Label>
+              <Input id="institution" name="institution" placeholder="Your University" required />
             </div>
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
-            <Input id="email" name="email" placeholder="m@example.com" type="email" required />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="password">Password</Label>
-            <Input id="password" name="password" type="password" required />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="confirmPassword">Confirm Password</Label>
-            <Input id="confirmPassword" name="confirmPassword" type="password" required />
-          </div>
-          <Button className="w-full" type="submit" disabled={loading}>
-            {loading ? 'Creating account...' : 'Create Account'}
-          </Button>
-        </form>
-      </CardContent>
+            <div className="space-y-2">
+              <Label htmlFor="email">Email</Label>
+              <Input id="email" name="email" type="email" required />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="password">Password</Label>
+              <Input id="password" name="password" type="password" required />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="confirmPassword">Confirm Password</Label>
+              <Input id="confirmPassword" name="confirmPassword" type="password" required />
+            </div>
+            <Button className="w-full" type="submit" disabled={loading}>
+              {loading ? 'Creating account...' : 'Create Account'}
+            </Button>
+          </form>
+        </CardContent>
         <CardFooter>
           <div className="text-sm text-center w-full">
             Already have an account?{" "}

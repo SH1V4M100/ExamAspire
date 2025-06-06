@@ -8,8 +8,7 @@ import { fileURLToPath } from 'url'
 import { Exams } from './collections/Exams'
 import { ExamAttempts } from './collections/ExamAttempts' 
 import Notifications from './collections/Notifications'
-//import { Results } from './collections/Results'
-//import { Attempts } from './collections/Attempts'
+import { resendAdapter } from '@payloadcms/email-resend'
 import { Categories } from './collections/Categories'
 import { Media } from './collections/Media'
 import { Pages } from './collections/Pages'
@@ -84,6 +83,11 @@ export default buildConfig({
       },
     }),
   ],
+  email: resendAdapter({
+    defaultFromAddress: 'no-reply@resend.dev', // ✅ no domain setup requiredś
+    defaultFromName: 'ExamAspire',
+    apiKey: process.env.RESEND_API_KEY || '',
+  }),
   secret: process.env.PAYLOAD_SECRET,
   sharp,
   typescript: {

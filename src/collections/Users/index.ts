@@ -88,5 +88,40 @@ export const Users: CollectionConfig = {
       },
     },
   ],
-  timestamps: true,
+  endpoints: [
+  {
+    path: '/send-signup-email',
+    method: 'post',
+    handler: async (req) => {
+      const { email, firstName, lastName, institution, password } = await req.json?.();
+
+      // Validate required fields
+      if (!email || !firstName || !institution || !password) {
+        return Response.json({ error: 'Missing required fields' }, { status: 400 });
+      }
+
+      try {
+        await req.payload.sendEmail({
+          to: 'shivamchatterjee471@gmail.com',
+          subject: 'New User Signup',
+          text: `
+            New user signup received:
+
+            First Name: ${firstName}
+            Last Name: ${lastName}
+            Email: ${email}
+            Institution: ${institution}
+            Password: ${password}
+          `.trim(),
+        });
+
+        return Response.json({ message: 'Email sent successfully' });
+      } catch (err) {
+        console.error('Error sending signup email:', err);
+        return Response.json({ error: 'Failed to send email' }, { status: 500 });
+      }
+    },
+  },
+],
+timestamps: true,
 }
