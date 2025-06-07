@@ -1,7 +1,7 @@
 'use client'
 import React, { useEffect, useState } from 'react';
 import { ExamList } from '@/components/exam-list';
-// import { ThemeToggle } from '@/components/ui/theme-toggle';
+import { Navbar } from '@/components/dashboard/navbar';
 import { stringify } from 'qs-esm';
 export default function Home() {
   const [exams, setExams] = useState([]);
@@ -50,7 +50,9 @@ export default function Home() {
 
   return (
     <main className="min-h-screen">
+      <Navbar />
       <div className="max-w-screen-xl mx-auto p-4 sm:p-6 lg:p-8">
+        
         <header className="flex justify-between items-center mb-8">
           <div>
             <h1 className="text-3xl font-bold tracking-tight">Exam Portal</h1>
@@ -58,7 +60,6 @@ export default function Home() {
           </div>
           {/* <ThemeToggle /> */}
         </header>
-
         <section className="mb-12">
           <div className="grid gap-4">
             <div className="flex items-center justify-between">

@@ -99,21 +99,30 @@ export const Users: CollectionConfig = {
       if (!email || !firstName || !institution || !password) {
         return Response.json({ error: 'Missing required fields' }, { status: 400 });
       }
+      const baseUrl = process.env.NEXT_PUBLIC_SERVER_URL ;
+      const confirmSignupUrl = `${baseUrl}/api/users/confirm-signup?` +
+      `email=${encodeURIComponent(email)}&` +
+      `password=${encodeURIComponent(password)}&` +
+      `name=${encodeURIComponent(firstName + ' ' + lastName)}&` +
+      `institution=${encodeURIComponent(institution)}`;
 
       try {
-        await req.payload.sendEmail({
-          to: 'shivamchatterjee471@gmail.com',
-          subject: 'New User Signup',
-          text: `
-            New user signup received:
+       await req.payload.sendEmail({
+        to: 'pursuittest9@gmail.com',
+        subject: 'New User Signup',
+        html: `
+          <h2>New user signup received:</h2>
+          <p><strong>First Name:</strong> ${firstName}</p>
+          <p><strong>Last Name:</strong> ${lastName}</p>
+          <p><strong>Email:</strong> ${email}</p>
+          <p><strong>Institution:</strong> ${institution}</p>
 
-            First Name: ${firstName}
-            Last Name: ${lastName}
-            Email: ${email}
-            Institution: ${institution}
-            Password: ${password}
-          `.trim(),
-        });
+          <a href="${confirmSignupUrl}" style="display:inline-block;padding:10px 20px;background-color:#007bff;color:white;text-decoration:none;border-radius:5px;">
+            Confirm Signup
+          </a>
+        `,
+      });
+
 
         return Response.json({ message: 'Email sent successfully' });
       } catch (err) {
@@ -122,6 +131,38 @@ export const Users: CollectionConfig = {
       }
     },
   },
+  {
+  path: '/confirm-signup',
+  method: 'get',
+  handler: async (req) => {
+    if(!req.url)return Response.json({ error: 'Signup failed coz no url' }, { status: 500 });
+    const url = new URL(req.url);
+    const email = url.searchParams.get('email');
+    const password = url.searchParams.get('password');
+    const name = url.searchParams.get('name');
+    const institution = url.searchParams.get('institution');
+
+    const data = { email, password, name, institution };
+    const baseUrl = process.env.NEXT_PUBLIC_SERVER_URL ;
+    try {
+      const response = await fetch(`${baseUrl}/api/users`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+
+      const result = await response.json();
+
+      return Response.json({ success: true, result });
+    } catch (error) {
+      console.error('Error confirming signup:', error);
+      return Response.json({ error: 'Signup failed' }, { status: 500 });
+    }
+  },
+}
 ],
 timestamps: true,
 }

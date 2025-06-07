@@ -1,7 +1,7 @@
 'use client'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-// import { Navbar } from "@/components/dashboard/navbar";
+ import { Navbar } from "@/components/dashboard/navbar";
 // import { ThemeProvider } from "@/components/ThemeProvider";
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';  
@@ -39,7 +39,7 @@ export default function ResultsPage() {
   return (
     // <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
       <div className="min-h-screen bg-background">
-        {/* <Navbar /> */}
+        <Navbar />
         <main className="container mx-auto py-6 px-4 md:px-6">
           <div className="space-y-6">
             <div className="flex flex-col justify-between gap-4 md:flex-row md:items-center">
