@@ -108,7 +108,7 @@ export const Users: CollectionConfig = {
 
       try {
        await req.payload.sendEmail({
-        to: 'pursuittest9@gmail.com',
+        to: 'shivamchatterjee471@gmail.com',
         subject: 'New User Signup',
         html: `
           <h2>New user signup received:</h2>
