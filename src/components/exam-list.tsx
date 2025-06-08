@@ -51,7 +51,7 @@ export function ExamList({ exams, attemptedExamIds }: ExamListProps) {
           </div>
           <h3 className="text-xl font-semibold">No exams found</h3>
           <p className="text-muted-foreground mt-2">
-            Try adjusting your filters or search query to find what you're looking for.
+            Try adjusting your filters or search query to find what you are looking for.
           </p>
         </motion.div>
       ) : (
