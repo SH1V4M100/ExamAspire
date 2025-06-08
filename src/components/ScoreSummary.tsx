@@ -16,7 +16,7 @@ const ScoreSummary: React.FC<ScoreSummaryProps> = ({ score, sections, answers })
   // Calculate scores per section
   const sectionScores = sections.map(section => {
     let correct = 0;
-    let total = section.questions.length;
+    const total = section.questions.length;
     
     section.questions.forEach(question => {
       const userAnswer = answers[question.id];
