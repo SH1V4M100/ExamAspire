@@ -40,7 +40,7 @@ export function UpcomingExams() {
           }
         }, { addQueryPrefix: true });
 
-        const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/exams${query}`, {
+        const res = await fetch(`/api/exams${query}`, {
           credentials: 'include',
         });
 

@@ -22,7 +22,7 @@ export default function ResultsPage() {
   useEffect(() => {
     const fetchUserExamAttempts = async () => {
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/exam-attempts/user-exam-attempts`, {
+        const response = await fetch(`/api/exam-attempts/user-exam-attempts`, {
           credentials: 'include',
         });
         const data = await response.json();

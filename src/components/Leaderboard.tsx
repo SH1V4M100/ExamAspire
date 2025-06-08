@@ -22,7 +22,7 @@ const Leaderboard: React.FC<LeaderboardProps> = ({ currentScore, slug }) => {
   useEffect(() => {
     const fetchScores = async () => {
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/exam-attempts/${slug}/scores`, {
+        const response = await fetch(`/api/exam-attempts/${slug}/scores`, {
           credentials: 'include',
         });
         const data = await response.json();
