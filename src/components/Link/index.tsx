@@ -34,18 +34,17 @@ export const CMSLink: React.FC<CMSLinkType> = (props) => {
   } = props
 
   const href =
-    type === 'reference' && typeof reference?.value === 'object' && reference.value.slug
-      ? `${reference?.relationTo !== 'pages' ? `/${reference?.relationTo}` : ''}/${
-          reference.value.slug
-        }`
+    type === 'reference' &&
+    typeof reference?.value === 'object' &&
+    reference.value.slug
+      ? `${reference?.relationTo !== 'pages' ? `/${reference?.relationTo}` : ''}/${reference.value.slug}`
       : url
 
   if (!href) return null
 
-  const size = appearance === 'link' ? 'clear' : sizeFromProps
   const newTabProps = newTab ? { rel: 'noopener noreferrer', target: '_blank' } : {}
 
-  /* Ensure we don't break any styles set by richText */
+  // If inline, use a plain <Link>
   if (appearance === 'inline') {
     return (
       <Link className={cn(className)} href={href || url || ''} {...newTabProps}>
@@ -55,8 +54,14 @@ export const CMSLink: React.FC<CMSLinkType> = (props) => {
     )
   }
 
+  // Use Button for other variants
   return (
-    <Button asChild className={className} size={size} variant={appearance}>
+    <Button
+      asChild
+      className={className}
+      size={sizeFromProps ?? 'default'} // ✅ ensure only valid sizes are used
+      variant={appearance}
+    >
       <Link className={cn(className)} href={href || url || ''} {...newTabProps}>
         {label && label}
         {children && children}
