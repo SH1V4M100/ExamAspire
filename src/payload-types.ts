@@ -283,9 +283,18 @@ export interface Post {
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "media".
  */
+interface MediaSize {
+  url: string;
+  width?: number;
+  height?: number;
+}
 export interface Media {
   id: number;
   alt?: string | null;
+  sizes?: {
+    og?: MediaSize;
+    [key: string]: MediaSize | undefined;
+  };
   caption?: {
     root: {
       type: string;
