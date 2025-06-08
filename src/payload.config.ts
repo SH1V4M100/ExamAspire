@@ -70,7 +70,7 @@ export default buildConfig({
     },
   }),
   collections: [Pages, Posts, Media, Categories, Users, Admin, Exams, ExamAttempts, Forms, Notifications],
-  cors: [getServerSideURL()].filter(Boolean),
+  cors: '*',
   globals: [Header, Footer],
   plugins: [
     uploadthingStorage({
