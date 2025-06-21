@@ -129,7 +129,7 @@ export const Exams: CollectionConfig = {
             {
               name: 'options',
               type: 'array',
-              required: true,
+              required: false,
               minRows: 1,
               maxRows: 10,
               fields: [

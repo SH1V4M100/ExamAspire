@@ -23,10 +23,10 @@ export default function Home() {
         );
   
         const [examsRes, attemptsRes] = await Promise.all([
-          fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/exams${examQuery}`, {
+          fetch(`/api/exams${examQuery}`, {
             credentials: 'include',
           }),
-          fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/exam-attempts/my-exam-ids`, {
+          fetch(`/api/exam-attempts/my-exam-ids`, {
             credentials: 'include',
           }),
         ]);  

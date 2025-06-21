@@ -13,7 +13,7 @@ export function QuickActions() {
       </CardHeader>
       <CardContent className="flex flex-col gap-2">
       <a 
-          href="/exams/0/attempt"
+          href="/exams/1/attempt"
           target="_blank"
           rel="noopener noreferrer"
         >

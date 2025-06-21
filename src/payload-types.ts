@@ -283,18 +283,9 @@ export interface Post {
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "media".
  */
-interface MediaSize {
-  url: string;
-  width?: number;
-  height?: number;
-}
 export interface Media {
   id: number;
   alt?: string | null;
-  sizes?: {
-    og?: MediaSize;
-    [key: string]: MediaSize | undefined;
-  };
   caption?: {
     root: {
       type: string;
@@ -412,14 +403,16 @@ export interface Exam {
        * Optional image for the question
        */
       image?: (number | null) | Media;
-      options: {
-        text: string;
-        /**
-         * Mark this option as correct
-         */
-        isCorrect?: boolean | null;
-        id?: string | null;
-      }[];
+      options?:
+        | {
+            text: string;
+            /**
+             * Mark this option as correct
+             */
+            isCorrect?: boolean | null;
+            id?: string | null;
+          }[]
+        | null;
       id?: string | null;
     }[];
     id?: string | null;

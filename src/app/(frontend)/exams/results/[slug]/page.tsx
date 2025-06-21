@@ -14,7 +14,7 @@ function ResultSlugPage() {
   useEffect(() => {
     const fetchAttempt = async () => {
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/exam-attempts/${slug}`, {
+        const res = await fetch(`/api/exam-attempts/${slug}`, {
           credentials: 'include',
         });
 

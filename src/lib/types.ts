@@ -37,12 +37,16 @@ export interface Section {
   subject: string;
   questions: Question[];
 }
+type Instruction = {
+  id: string;
+  instruction: string | null;
+};
 
 export interface Exam {
   id: number;
   title: string;
   description: string;
-  instructions: string[];
+  instructions: Instruction[];
   duration: number;
   isNegativeMarkingEnabled: boolean;
   attempted: boolean;

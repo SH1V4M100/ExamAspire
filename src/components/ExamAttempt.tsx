@@ -77,6 +77,7 @@ const ExamAttempt: React.FC<ExamAttemptProps> = ({ exam }) => {
   }
   
   if (showInstructions) {
+    //console.log(exam.instructions)
     return (
       <div className="min-h-screen bg-gray-50">
         <ExamHeader 
@@ -94,11 +95,14 @@ const ExamAttempt: React.FC<ExamAttemptProps> = ({ exam }) => {
             
             {exam.instructions.length > 0 ? (
               <div className="space-y-4 mb-8">
-                {exam.instructions.map((instruction, index) => (
-                  <p key={index} className="text-gray-700">
-                    {instruction}
-                  </p>
-                ))}
+                {exam.instructions
+  .filter((instructionObj) => typeof instructionObj.instruction === 'string' && instructionObj.instruction.trim())
+  .map((instructionObj, index) => (
+    <p key={index} className="text-gray-700">
+      {instructionObj.instruction}
+    </p>
+))}
+
               </div>
             ) : (
               <div className="mb-8">
