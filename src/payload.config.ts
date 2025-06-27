@@ -69,7 +69,7 @@ export default buildConfig({
       connectionString: process.env.DATABASE_URI || '',
     },
   }),
-  collections: [Pages, Posts, Media, Categories, Users, Admin, Exams, ExamAttempts, Forms, Notifications],
+  collections: [Exams, Users, Admin, Notifications, Pages, Posts, Media, Categories, ExamAttempts, Forms],
   cors: '*',
   globals: [Header, Footer],
   plugins: [

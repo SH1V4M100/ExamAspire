@@ -5,7 +5,7 @@ import { CollectionConfig } from 'payload'
 export const Forms: CollectionConfig = {
   slug: 'forms',
   admin: {
-    useAsTitle: 'title',
+    hidden: true
   },
   fields: [
     {

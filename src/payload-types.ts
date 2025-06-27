@@ -68,16 +68,16 @@ export interface Config {
   };
   blocks: {};
   collections: {
+    exams: Exam;
+    users: User;
+    admin: Admin;
+    notifications: Notification;
     pages: Page;
     posts: Post;
     media: Media;
     categories: Category;
-    users: User;
-    admin: Admin;
-    exams: Exam;
     'exam-attempts': ExamAttempt;
     forms: Form;
-    notifications: Notification;
     'payload-jobs': PayloadJob;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -85,16 +85,16 @@ export interface Config {
   };
   collectionsJoins: {};
   collectionsSelect: {
+    exams: ExamsSelect<false> | ExamsSelect<true>;
+    users: UsersSelect<false> | UsersSelect<true>;
+    admin: AdminSelect<false> | AdminSelect<true>;
+    notifications: NotificationsSelect<false> | NotificationsSelect<true>;
     pages: PagesSelect<false> | PagesSelect<true>;
     posts: PostsSelect<false> | PostsSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     categories: CategoriesSelect<false> | CategoriesSelect<true>;
-    users: UsersSelect<false> | UsersSelect<true>;
-    admin: AdminSelect<false> | AdminSelect<true>;
-    exams: ExamsSelect<false> | ExamsSelect<true>;
     'exam-attempts': ExamAttemptsSelect<false> | ExamAttemptsSelect<true>;
     forms: FormsSelect<false> | FormsSelect<true>;
-    notifications: NotificationsSelect<false> | NotificationsSelect<true>;
     'payload-jobs': PayloadJobsSelect<false> | PayloadJobsSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -165,6 +165,173 @@ export interface AdminAuthOperations {
     email: string;
     password: string;
   };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "exams".
+ */
+export interface Exam {
+  id: number;
+  title: string;
+  description?: string | null;
+  instructions?:
+    | {
+        instruction?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Duration in minutes
+   */
+  duration: number;
+  isNegativeMarkingEnabled?: boolean | null;
+  /**
+   * When this exam becomes available (optional)
+   */
+  startDate?: string | null;
+  /**
+   * When this exam becomes unavailable (optional)
+   */
+  endDate?: string | null;
+  /**
+   * Add subject sections with their respective questions
+   */
+  sections: {
+    /**
+     * Choose the subject for this section
+     */
+    subject: 'physics' | 'chemistry' | 'maths';
+    /**
+     * Enter questions for this subject
+     */
+    questions: {
+      questionText: string;
+      /**
+       * Specify the type of this question
+       */
+      questionType: 'single' | 'multi' | 'integer';
+      /**
+       * Optional image for the question
+       */
+      image?: (number | null) | Media;
+      options?:
+        | {
+            text: string;
+            /**
+             * Mark this option as correct
+             */
+            isCorrect?: boolean | null;
+            id?: string | null;
+          }[]
+        | null;
+      id?: string | null;
+    }[];
+    id?: string | null;
+  }[];
+  /**
+   * Only published exams are visible to students
+   */
+  _status: 'draft' | 'published';
+  slug?: string | null;
+  slugLock?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "media".
+ */
+export interface Media {
+  id: number;
+  alt?: string | null;
+  caption?: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  _key?: string | null;
+  updatedAt: string;
+  createdAt: string;
+  url?: string | null;
+  thumbnailURL?: string | null;
+  filename?: string | null;
+  mimeType?: string | null;
+  filesize?: number | null;
+  width?: number | null;
+  height?: number | null;
+  focalX?: number | null;
+  focalY?: number | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "users".
+ */
+export interface User {
+  id: number;
+  name?: string | null;
+  institution?: string | null;
+  completedExams?: (number | Exam)[] | null;
+  overallPerformance?:
+    | {
+        averageScore?: number | null;
+        totalAttempts?: number | null;
+        successfulAttempts?: number | null;
+        lastExamDate?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt: string;
+  createdAt: string;
+  email: string;
+  resetPasswordToken?: string | null;
+  resetPasswordExpiration?: string | null;
+  salt?: string | null;
+  hash?: string | null;
+  loginAttempts?: number | null;
+  lockUntil?: string | null;
+  password?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "admin".
+ */
+export interface Admin {
+  id: number;
+  name?: string | null;
+  department?: string | null;
+  year?: number | null;
+  role?: string | null;
+  updatedAt: string;
+  createdAt: string;
+  email: string;
+  resetPasswordToken?: string | null;
+  resetPasswordExpiration?: string | null;
+  salt?: string | null;
+  hash?: string | null;
+  loginAttempts?: number | null;
+  lockUntil?: string | null;
+  password?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "notifications".
+ */
+export interface Notification {
+  id: number;
+  message: string;
+  seenBy?: (number | User)[] | null;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -281,146 +448,11 @@ export interface Post {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "media".
- */
-export interface Media {
-  id: number;
-  alt?: string | null;
-  caption?: {
-    root: {
-      type: string;
-      children: {
-        type: string;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  } | null;
-  _key?: string | null;
-  updatedAt: string;
-  createdAt: string;
-  url?: string | null;
-  thumbnailURL?: string | null;
-  filename?: string | null;
-  mimeType?: string | null;
-  filesize?: number | null;
-  width?: number | null;
-  height?: number | null;
-  focalX?: number | null;
-  focalY?: number | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "categories".
  */
 export interface Category {
   id: number;
   title: string;
-  slug?: string | null;
-  slugLock?: boolean | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "users".
- */
-export interface User {
-  id: number;
-  name?: string | null;
-  institution?: string | null;
-  completedExams?: (number | Exam)[] | null;
-  overallPerformance?:
-    | {
-        averageScore?: number | null;
-        totalAttempts?: number | null;
-        successfulAttempts?: number | null;
-        lastExamDate?: string | null;
-        id?: string | null;
-      }[]
-    | null;
-  updatedAt: string;
-  createdAt: string;
-  email: string;
-  resetPasswordToken?: string | null;
-  resetPasswordExpiration?: string | null;
-  salt?: string | null;
-  hash?: string | null;
-  loginAttempts?: number | null;
-  lockUntil?: string | null;
-  password?: string | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "exams".
- */
-export interface Exam {
-  id: number;
-  title: string;
-  description?: string | null;
-  instructions?:
-    | {
-        instruction?: string | null;
-        id?: string | null;
-      }[]
-    | null;
-  /**
-   * Duration in minutes
-   */
-  duration: number;
-  isNegativeMarkingEnabled?: boolean | null;
-  /**
-   * When this exam becomes available (optional)
-   */
-  startDate?: string | null;
-  /**
-   * When this exam becomes unavailable (optional)
-   */
-  endDate?: string | null;
-  /**
-   * Add subject sections with their respective questions
-   */
-  sections: {
-    /**
-     * Choose the subject for this section
-     */
-    subject: 'physics' | 'chemistry' | 'maths';
-    /**
-     * Enter questions for this subject
-     */
-    questions: {
-      questionText: string;
-      /**
-       * Specify the type of this question
-       */
-      questionType: 'single' | 'multi' | 'integer';
-      /**
-       * Optional image for the question
-       */
-      image?: (number | null) | Media;
-      options?:
-        | {
-            text: string;
-            /**
-             * Mark this option as correct
-             */
-            isCorrect?: boolean | null;
-            id?: string | null;
-          }[]
-        | null;
-      id?: string | null;
-    }[];
-    id?: string | null;
-  }[];
-  /**
-   * Only published exams are visible to students
-   */
-  _status: 'draft' | 'published';
   slug?: string | null;
   slugLock?: boolean | null;
   updatedAt: string;
@@ -606,27 +638,6 @@ export interface Form {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "admin".
- */
-export interface Admin {
-  id: number;
-  name?: string | null;
-  department?: string | null;
-  year?: number | null;
-  role?: string | null;
-  updatedAt: string;
-  createdAt: string;
-  email: string;
-  resetPasswordToken?: string | null;
-  resetPasswordExpiration?: string | null;
-  salt?: string | null;
-  hash?: string | null;
-  loginAttempts?: number | null;
-  lockUntil?: string | null;
-  password?: string | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "exam-attempts".
  */
 export interface ExamAttempt {
@@ -652,17 +663,6 @@ export interface ExamAttempt {
   mathsTotal?: number | null;
   timeSpent: number;
   submittedAt: string;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "notifications".
- */
-export interface Notification {
-  id: number;
-  message: string;
-  seenBy?: (number | User)[] | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -766,6 +766,22 @@ export interface PayloadLockedDocument {
   id: number;
   document?:
     | ({
+        relationTo: 'exams';
+        value: number | Exam;
+      } | null)
+    | ({
+        relationTo: 'users';
+        value: number | User;
+      } | null)
+    | ({
+        relationTo: 'admin';
+        value: number | Admin;
+      } | null)
+    | ({
+        relationTo: 'notifications';
+        value: number | Notification;
+      } | null)
+    | ({
         relationTo: 'pages';
         value: number | Page;
       } | null)
@@ -782,28 +798,12 @@ export interface PayloadLockedDocument {
         value: number | Category;
       } | null)
     | ({
-        relationTo: 'users';
-        value: number | User;
-      } | null)
-    | ({
-        relationTo: 'admin';
-        value: number | Admin;
-      } | null)
-    | ({
-        relationTo: 'exams';
-        value: number | Exam;
-      } | null)
-    | ({
         relationTo: 'exam-attempts';
         value: number | ExamAttempt;
       } | null)
     | ({
         relationTo: 'forms';
         value: number | Form;
-      } | null)
-    | ({
-        relationTo: 'notifications';
-        value: number | Notification;
       } | null)
     | ({
         relationTo: 'payload-jobs';
@@ -860,6 +860,106 @@ export interface PayloadMigration {
   batch?: number | null;
   updatedAt: string;
   createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "exams_select".
+ */
+export interface ExamsSelect<T extends boolean = true> {
+  title?: T;
+  description?: T;
+  instructions?:
+    | T
+    | {
+        instruction?: T;
+        id?: T;
+      };
+  duration?: T;
+  isNegativeMarkingEnabled?: T;
+  startDate?: T;
+  endDate?: T;
+  sections?:
+    | T
+    | {
+        subject?: T;
+        questions?:
+          | T
+          | {
+              questionText?: T;
+              questionType?: T;
+              image?: T;
+              options?:
+                | T
+                | {
+                    text?: T;
+                    isCorrect?: T;
+                    id?: T;
+                  };
+              id?: T;
+            };
+        id?: T;
+      };
+  _status?: T;
+  slug?: T;
+  slugLock?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "users_select".
+ */
+export interface UsersSelect<T extends boolean = true> {
+  name?: T;
+  institution?: T;
+  completedExams?: T;
+  overallPerformance?:
+    | T
+    | {
+        averageScore?: T;
+        totalAttempts?: T;
+        successfulAttempts?: T;
+        lastExamDate?: T;
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  email?: T;
+  resetPasswordToken?: T;
+  resetPasswordExpiration?: T;
+  salt?: T;
+  hash?: T;
+  loginAttempts?: T;
+  lockUntil?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "admin_select".
+ */
+export interface AdminSelect<T extends boolean = true> {
+  name?: T;
+  department?: T;
+  year?: T;
+  role?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  email?: T;
+  resetPasswordToken?: T;
+  resetPasswordExpiration?: T;
+  salt?: T;
+  hash?: T;
+  loginAttempts?: T;
+  lockUntil?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "notifications_select".
+ */
+export interface NotificationsSelect<T extends boolean = true> {
+  message?: T;
+  seenBy?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1060,96 +1160,6 @@ export interface CategoriesSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "users_select".
- */
-export interface UsersSelect<T extends boolean = true> {
-  name?: T;
-  institution?: T;
-  completedExams?: T;
-  overallPerformance?:
-    | T
-    | {
-        averageScore?: T;
-        totalAttempts?: T;
-        successfulAttempts?: T;
-        lastExamDate?: T;
-        id?: T;
-      };
-  updatedAt?: T;
-  createdAt?: T;
-  email?: T;
-  resetPasswordToken?: T;
-  resetPasswordExpiration?: T;
-  salt?: T;
-  hash?: T;
-  loginAttempts?: T;
-  lockUntil?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "admin_select".
- */
-export interface AdminSelect<T extends boolean = true> {
-  name?: T;
-  department?: T;
-  year?: T;
-  role?: T;
-  updatedAt?: T;
-  createdAt?: T;
-  email?: T;
-  resetPasswordToken?: T;
-  resetPasswordExpiration?: T;
-  salt?: T;
-  hash?: T;
-  loginAttempts?: T;
-  lockUntil?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "exams_select".
- */
-export interface ExamsSelect<T extends boolean = true> {
-  title?: T;
-  description?: T;
-  instructions?:
-    | T
-    | {
-        instruction?: T;
-        id?: T;
-      };
-  duration?: T;
-  isNegativeMarkingEnabled?: T;
-  startDate?: T;
-  endDate?: T;
-  sections?:
-    | T
-    | {
-        subject?: T;
-        questions?:
-          | T
-          | {
-              questionText?: T;
-              questionType?: T;
-              image?: T;
-              options?:
-                | T
-                | {
-                    text?: T;
-                    isCorrect?: T;
-                    id?: T;
-                  };
-              id?: T;
-            };
-        id?: T;
-      };
-  _status?: T;
-  slug?: T;
-  slugLock?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "exam-attempts_select".
  */
 export interface ExamAttemptsSelect<T extends boolean = true> {
@@ -1175,16 +1185,6 @@ export interface ExamAttemptsSelect<T extends boolean = true> {
  */
 export interface FormsSelect<T extends boolean = true> {
   title?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "notifications_select".
- */
-export interface NotificationsSelect<T extends boolean = true> {
-  message?: T;
-  seenBy?: T;
   updatedAt?: T;
   createdAt?: T;
 }

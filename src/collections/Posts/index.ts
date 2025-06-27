@@ -47,26 +47,27 @@ export const Posts: CollectionConfig<'posts'> = {
       description: true,
     },
   },
-  admin: {
-    defaultColumns: ['title', 'slug', 'updatedAt'],
-    livePreview: {
-      url: ({ data, req }) => {
-        const path = generatePreviewPath({
-          slug: typeof data?.slug === 'string' ? data.slug : '',
-          collection: 'posts',
-          req,
-        })
+   admin: {
+    hidden: true
+  //   defaultColumns: ['title', 'slug', 'updatedAt'],
+  //   livePreview: {
+  //     url: ({ data, req }) => {
+  //       const path = generatePreviewPath({
+  //         slug: typeof data?.slug === 'string' ? data.slug : '',
+  //         collection: 'posts',
+  //         req,
+  //       })
 
-        return path
-      },
-    },
-    preview: (data, { req }) =>
-      generatePreviewPath({
-        slug: typeof data?.slug === 'string' ? data.slug : '',
-        collection: 'posts',
-        req,
-      }),
-    useAsTitle: 'title',
+  //       return path
+  //     },
+  //   },
+  //   preview: (data, { req }) =>
+  //     generatePreviewPath({
+  //       slug: typeof data?.slug === 'string' ? data.slug : '',
+  //       collection: 'posts',
+  //       req,
+  //     }),
+  //   useAsTitle: 'title',
   },
   fields: [
     {

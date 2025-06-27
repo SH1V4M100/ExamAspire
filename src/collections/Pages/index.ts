@@ -37,25 +37,26 @@ export const Pages: CollectionConfig<'pages'> = {
     slug: true,
   },
   admin: {
-    defaultColumns: ['title', 'slug', 'updatedAt'],
-    livePreview: {
-      url: ({ data, req }) => {
-        const path = generatePreviewPath({
-          slug: typeof data?.slug === 'string' ? data.slug : '',
-          collection: 'pages',
-          req,
-        })
+    hidden: true
+    // defaultColumns: ['title', 'slug', 'updatedAt'],
+    // livePreview: {
+    //   url: ({ data, req }) => {
+    //     const path = generatePreviewPath({
+    //       slug: typeof data?.slug === 'string' ? data.slug : '',
+    //       collection: 'pages',
+    //       req,
+    //     })
 
-        return path
-      },
-    },
-    preview: (data, { req }) =>
-      generatePreviewPath({
-        slug: typeof data?.slug === 'string' ? data.slug : '',
-        collection: 'pages',
-        req,
-      }),
-    useAsTitle: 'title',
+    //     return path
+    //   },
+    // },
+    // preview: (data, { req }) =>
+    //   generatePreviewPath({
+    //     slug: typeof data?.slug === 'string' ? data.slug : '',
+    //     collection: 'pages',
+    //     req,
+    //   }),
+    // useAsTitle: 'title',
   },
   fields: [
     {

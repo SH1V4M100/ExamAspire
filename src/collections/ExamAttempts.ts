@@ -3,6 +3,9 @@ import { CollectionConfig } from 'payload';
 
 export const ExamAttempts: CollectionConfig = {
   slug: 'exam-attempts',
+  admin: {
+    hidden: true
+  },
   fields: [
     {
       name: 'user',
