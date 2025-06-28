@@ -22,7 +22,7 @@ export interface Image {
   focalY: number;
 }
 
-export type QuestionType = 'single' | 'multi' | 'integer';
+export type QuestionType = 'single 1'| 'single 2'| 'single 4' | 'multi' | 'integer';
 
 export interface Question {
   id: string;

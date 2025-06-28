@@ -109,7 +109,9 @@ export const Exams: CollectionConfig = {
               type: 'select',
               required: true,
               options: [
-                { label: 'Single Correct', value: 'single' },
+                { label: 'Single Correct A', value: 'single 1' },
+                { label: 'Single Correct B', value: 'single 2' },
+                { label: 'Single Correct C', value: 'single 4' },
                 { label: 'Multiple Correct', value: 'multi' },
                 { label: 'Integer Type', value: 'integer' },
               ],

@@ -205,11 +205,11 @@ export interface Exam {
      * Enter questions for this subject
      */
     questions: {
-      questionText: string;
+      questionText?: string | null;
       /**
        * Specify the type of this question
        */
-      questionType: 'single' | 'multi' | 'integer';
+      questionType: 'single 1' | 'single 2' | 'single 4' | 'multi' | 'integer';
       /**
        * Optional image for the question
        */

@@ -215,7 +215,27 @@ export const useExamState = (exam: Exam) => {
         const subjectKey = question.subject as Subject; // physics / chemistry / maths
   
         switch (question.questionType) {
-          case 'single':
+          case 'single 1':
+            if (userAnswer && userAnswer.selectedOptionIds) {
+              const delta = isCorrect ? 1 : -0.25;
+              score += delta;
+              subjectScores[subjectKey].score += delta;
+            }
+            totalMarks += 1;
+            subjectScores[subjectKey].total += 1;
+            break;
+            
+          case 'single 2':
+            if (userAnswer && userAnswer.selectedOptionIds) {
+              const delta = isCorrect ? 2 : -0.5;
+              score += delta;
+              subjectScores[subjectKey].score += delta;
+            }
+            totalMarks += 2;
+            subjectScores[subjectKey].total += 2;
+            break;
+          
+          case 'single 4':
             if (userAnswer && userAnswer.selectedOptionIds) {
               const delta = isCorrect ? 4 : -1;
               score += delta;
@@ -224,10 +244,10 @@ export const useExamState = (exam: Exam) => {
             totalMarks += 4;
             subjectScores[subjectKey].total += 4;
             break;
-        
+
           case 'multi':
-            totalMarks += 4;
-            subjectScores[subjectKey].total += 4;
+            totalMarks += 2;
+            subjectScores[subjectKey].total += 2;
         
             if (userAnswer && userAnswer.selectedOptionIds) {
               const selected = userAnswer.selectedOptionIds;
@@ -239,11 +259,11 @@ export const useExamState = (exam: Exam) => {
               const totalCorrect = correctOptions.length;
         
               if (hasIncorrect) {
-                score -= 1;
-                subjectScores[subjectKey].score -= 1;
+                score -= 0;
+                subjectScores[subjectKey].score -= 0;
               } else if (correctSelected === totalCorrect) {
-                score += 4;
-                subjectScores[subjectKey].score += 4;
+                score += 2;
+                subjectScores[subjectKey].score += 2;
               } else if (correctSelected > 0) {
                 const partialMarks = (2 * correctSelected) / totalCorrect;
                 score += partialMarks;
@@ -257,6 +277,10 @@ export const useExamState = (exam: Exam) => {
             if (isCorrect) {
               score += 4;
               subjectScores[subjectKey].score += 4;
+            }
+            else{
+              score -= 1;
+              subjectScores[subjectKey].score -= 1;
             }
             totalMarks += 4;
             subjectScores[subjectKey].total += 4;
