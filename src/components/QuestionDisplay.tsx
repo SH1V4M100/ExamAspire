@@ -29,35 +29,38 @@ const QuestionDisplay: React.FC<QuestionDisplayProps> = ({
   isLastQuestion
 }) => {
   const renderQuestionComponent = () => {
-    switch (question.questionType) {
-      case 'single':
-        return (
-          <SingleChoiceQuestion
-            question={question}
-            userAnswer={userAnswer}
-            onAnswerChange={onAnswerChange}
-          />
-        );
-      case 'multi':
-        return (
-          <MultipleChoiceQuestion
-            question={question}
-            userAnswer={userAnswer}
-            onAnswerChange={onAnswerChange}
-          />
-        );
-      case 'integer':
-        return (
-          <IntegerQuestion
-            question={question}
-            userAnswer={userAnswer}
-            onAnswerChange={onAnswerChange}
-          />
-        );
-      default:
-        return <div>Unknown question type</div>;
-    }
-  };
+  switch (question.questionType) {
+    case 'single 1':
+    case 'single 2':
+    case 'single 4':
+      return (
+        <SingleChoiceQuestion
+          question={question}
+          userAnswer={userAnswer}
+          onAnswerChange={onAnswerChange}
+        />
+      );
+    case 'multi':
+      return (
+        <MultipleChoiceQuestion
+          question={question}
+          userAnswer={userAnswer}
+          onAnswerChange={onAnswerChange}
+        />
+      );
+    case 'integer':
+      return (
+        <IntegerQuestion
+          question={question}
+          userAnswer={userAnswer}
+          onAnswerChange={onAnswerChange}
+        />
+      );
+    default:
+      return <div>Unknown question type</div>;
+  }
+};
+
   
   return (
     <div className="bg-white rounded-xl shadow-md p-6">
