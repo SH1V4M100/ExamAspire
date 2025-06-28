@@ -5,6 +5,7 @@ import ExamHeader from './ExamHeader';
 import ExamNavigation from './ExamNavigation';
 import QuestionDisplay from './QuestionDisplay';
 import SubmissionModal from './SubmissionModal';
+import ReactMarkdown from 'react-markdown';
 
 interface ExamAttemptProps {
   exam: Exam;
@@ -99,7 +100,7 @@ const ExamAttempt: React.FC<ExamAttemptProps> = ({ exam }) => {
   .filter((instructionObj) => typeof instructionObj.instruction === 'string' && instructionObj.instruction.trim())
   .map((instructionObj, index) => (
     <p key={index} className="text-gray-700">
-      {instructionObj.instruction}
+       <ReactMarkdown>{instructionObj.instruction}</ReactMarkdown>
     </p>
 ))}
 

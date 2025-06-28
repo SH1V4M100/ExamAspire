@@ -127,27 +127,50 @@ export const Exams: CollectionConfig = {
               },
             },
             {
-              name: 'options',
-              type: 'array',
-              required: false,
-              minRows: 1,
-              maxRows: 10,
-              fields: [
-                {
-                  name: 'text',
-                  type: 'text',
-                  required: true,
-                },
-                {
-                  name: 'isCorrect',
-                  type: 'checkbox',
-                  defaultValue: false,
-                  admin: {
-                    description: 'Mark this option as correct',
-                  },
-                },
-              ],
-            },
+  name: 'options',
+  type: 'array',
+  required: false,
+  minRows: 1,
+  maxRows: 10,
+  fields: [
+    {
+      name: 'text',
+      type: 'text',
+      required: true,
+    },
+    {
+      name: 'isCorrect',
+      type: 'checkbox',
+      defaultValue: false,
+      admin: {
+        description: 'Mark this option as correct',
+      },
+    },
+  ],
+  validate: (value, { siblingData }) => {
+    // Type assertions
+    const typedOptions = value as { isCorrect?: boolean }[]; // assert array of options
+    const questionType = (siblingData as { questionType?: string })?.questionType;
+
+    if (!Array.isArray(typedOptions)) return true;
+
+    const correctCount = typedOptions.filter((opt) => opt?.isCorrect).length;
+
+    if (questionType === 'single' && correctCount !== 1) {
+      return 'Single correct questions must have exactly one correct option.';
+    }
+
+    if (questionType === 'multi' && correctCount < 1) {
+      return 'Multiple correct questions must have at least one correct option.';
+    }
+
+    if (questionType === 'integer' && typedOptions.length > 0) {
+      return 'Integer type questions should not have any options.';
+    }
+
+    return true;
+  },
+},
           ],
         },
       ],
