@@ -9,7 +9,7 @@ interface ExamHeaderProps {
 }
 
 const ExamHeader: React.FC<ExamHeaderProps> = ({ 
-  title, 
+  title,
   remainingTime, 
   totalProgress,
   isExamStarted 
