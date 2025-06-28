@@ -102,7 +102,7 @@ export const Exams: CollectionConfig = {
             {
               name: 'questionText',
               type: 'textarea',
-              required: true,
+              required: false,
             },
             {
               name: 'questionType',
