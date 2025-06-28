@@ -158,7 +158,7 @@ export const Exams: CollectionConfig = {
 
     const correctCount = typedOptions.filter((opt) => opt?.isCorrect).length;
 
-    if (questionType === 'single' && correctCount !== 1) {
+    if ((questionType === 'single 1'||questionType === 'single 2'||questionType === 'single 4' )&& correctCount !== 1) {
       return 'Single correct questions must have exactly one correct option.';
     }
 
