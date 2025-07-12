@@ -281,6 +281,8 @@ export interface User {
   name?: string | null;
   institution?: string | null;
   completedExams?: (number | Exam)[] | null;
+  contactNumber?: string | null;
+  academicYear?: string | null;
   overallPerformance?:
     | {
         averageScore?: number | null;
@@ -913,6 +915,8 @@ export interface UsersSelect<T extends boolean = true> {
   name?: T;
   institution?: T;
   completedExams?: T;
+  contactNumber?: T;
+  academicYear?: T;
   overallPerformance?:
     | T
     | {

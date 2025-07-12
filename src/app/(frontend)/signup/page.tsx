@@ -24,6 +24,8 @@ export default function SignUpPage() {
       firstName: formData.get('firstName'),
       lastName: formData.get('lastName'),
       institution: formData.get('institution'),
+      contactNumber: formData.get('contactNumber'),
+      academicYear: formData.get('academicYear'),
     };
 
     try {
@@ -69,7 +71,15 @@ export default function SignUpPage() {
             </div>
             <div className="space-y-2">
               <Label htmlFor="institution">Institution</Label>
-              <Input id="institution" name="institution" placeholder="Your University" required />
+              <Input id="institution" name="institution" placeholder="Your School/University" required />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="contactNumber">WhatsApp/Contact Number</Label>
+              <Input id="contactNumber" name="contactNumber" placeholder="+91 12345 67890" required />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="academicYear">Class/Academic Year (as of 2025-26)</Label>
+              <Input id="academicYear" name="academicYear" placeholder="e.g., 1st Year, 12th Grade" required />
             </div>
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
@@ -83,6 +93,7 @@ export default function SignUpPage() {
               <Label htmlFor="confirmPassword">Confirm Password</Label>
               <Input id="confirmPassword" name="confirmPassword" type="password" required />
             </div>
+            {error && <p className="text-sm text-red-500">{error}</p>}
             <Button className="w-full" type="submit" disabled={loading}>
               {loading ? 'Creating account...' : 'Create Account'}
             </Button>
@@ -90,7 +101,7 @@ export default function SignUpPage() {
         </CardContent>
         <CardFooter>
           <div className="text-sm text-center w-full">
-            Already have an account?{" "}
+            Already have an account?{' '}
             <Link href="/login" className="font-medium text-primary hover:underline">
               Sign in
             </Link>

@@ -41,6 +41,16 @@ export const Users: CollectionConfig = {
         readOnly: true,
       },
     },
+    {
+      name: 'contactNumber',
+      label: 'WhatsApp/Contact Number',
+      type: 'text',
+    },
+    {
+      name: 'academicYear',
+      label: 'Class/Academic Year',
+      type: 'text',
+    },
     // {
     //   name: 'examResults',
     //   type: 'relationship',
@@ -93,36 +103,40 @@ export const Users: CollectionConfig = {
     path: '/send-signup-email',
     method: 'post',
     handler: async (req) => {
-      const { email, firstName, lastName, institution, password } = await req.json?.();
+      const { email, firstName, lastName, institution, password, contactNumber, academicYear } = await req.json?.();
 
       // Validate required fields
-      if (!email || !firstName || !institution || !password) {
+      if (!email || !firstName || !institution || !password || !contactNumber || !academicYear) {
         return Response.json({ error: 'Missing required fields' }, { status: 400 });
       }
-      const baseUrl = process.env.NEXT_PUBLIC_SERVER_URL ;
+
+      const baseUrl = process.env.NEXT_PUBLIC_SERVER_URL;
       const confirmSignupUrl = `${baseUrl}/api/users/confirm-signup?` +
-      `email=${encodeURIComponent(email)}&` +
-      `password=${encodeURIComponent(password)}&` +
-      `name=${encodeURIComponent(firstName + ' ' + lastName)}&` +
-      `institution=${encodeURIComponent(institution)}`;
+        `email=${encodeURIComponent(email)}&` +
+        `password=${encodeURIComponent(password)}&` +
+        `name=${encodeURIComponent(firstName + ' ' + lastName)}&` +
+        `institution=${encodeURIComponent(institution)}&` +
+        `contactNumber=${encodeURIComponent(contactNumber)}&` +
+        `academicYear=${encodeURIComponent(academicYear)}`;
 
       try {
-       await req.payload.sendEmail({
-        to: 'shivamchatterjee471@gmail.com',
-        subject: 'New User Signup',
-        html: `
-          <h2>New user signup received:</h2>
-          <p><strong>First Name:</strong> ${firstName}</p>
-          <p><strong>Last Name:</strong> ${lastName}</p>
-          <p><strong>Email:</strong> ${email}</p>
-          <p><strong>Institution:</strong> ${institution}</p>
+        await req.payload.sendEmail({
+          to: 'pursuittest9@gmail.com',
+          subject: 'New User Signup',
+          html: `
+            <h2>New user signup received:</h2>
+            <p><strong>First Name:</strong> ${firstName}</p>
+            <p><strong>Last Name:</strong> ${lastName}</p>
+            <p><strong>Email:</strong> ${email}</p>
+            <p><strong>Institution:</strong> ${institution}</p>
+            <p><strong>Contact Number:</strong> ${contactNumber}</p>
+            <p><strong>Academic Year:</strong> ${academicYear}</p>
 
-          <a href="${confirmSignupUrl}" style="display:inline-block;padding:10px 20px;background-color:#007bff;color:white;text-decoration:none;border-radius:5px;">
-            Confirm Signup
-          </a>
-        `,
-      });
-
+            <a href="${confirmSignupUrl}" style="display:inline-block;padding:10px 20px;background-color:#007bff;color:white;text-decoration:none;border-radius:5px;">
+              Confirm Signup
+            </a>
+          `,
+        });
 
         return Response.json({ message: 'Email sent successfully' });
       } catch (err) {
