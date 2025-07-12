@@ -79,6 +79,39 @@ function ExamAttemptPage() {
     );
   }
 
+  
+// 🕒 Check exam availability based on current time
+const now = new Date();
+const start = new Date(exam.startDate);
+const end = new Date(exam.endDate);
+
+if (now < start) {
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="text-center max-w-md p-6 bg-white shadow-md rounded">
+        <h2 className="text-2xl font-semibold text-gray-800 mb-4">Exam Not Yet Available</h2>
+        <p className="text-gray-600">
+          This exam will be available starting <strong>{start.toLocaleString()}</strong>.
+        </p>
+      </div>
+    </div>
+  );
+}
+
+if (now > end) {
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="text-center max-w-md p-6 bg-white shadow-md rounded">
+        <h2 className="text-2xl font-semibold text-gray-800 mb-4">Exam Expired</h2>
+        <p className="text-gray-600">
+          This exam was available until <strong>{end.toLocaleString()}</strong>.
+        </p>
+      </div>
+    </div>
+  );
+}
+
+// If all good, render the actual ExamAttempt
   return <ExamAttempt exam={exam} />;
 }
 
