@@ -279,19 +279,8 @@ export interface Media {
 export interface User {
   id: number;
   name?: string | null;
-  institution?: string | null;
   completedExams?: (number | Exam)[] | null;
   contactNumber?: string | null;
-  academicYear?: string | null;
-  overallPerformance?:
-    | {
-        averageScore?: number | null;
-        totalAttempts?: number | null;
-        successfulAttempts?: number | null;
-        lastExamDate?: string | null;
-        id?: string | null;
-      }[]
-    | null;
   updatedAt: string;
   createdAt: string;
   email: string;
@@ -913,19 +902,8 @@ export interface ExamsSelect<T extends boolean = true> {
  */
 export interface UsersSelect<T extends boolean = true> {
   name?: T;
-  institution?: T;
   completedExams?: T;
   contactNumber?: T;
-  academicYear?: T;
-  overallPerformance?:
-    | T
-    | {
-        averageScore?: T;
-        totalAttempts?: T;
-        successfulAttempts?: T;
-        lastExamDate?: T;
-        id?: T;
-      };
   updatedAt?: T;
   createdAt?: T;
   email?: T;

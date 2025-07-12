@@ -29,10 +29,6 @@ export const Users: CollectionConfig = {
       type: 'text',
     },
     {
-      name: 'institution',
-      type: 'text'
-    },
-    {
       name: 'completedExams',
       type: 'relationship',
       relationTo: 'exams',
@@ -46,11 +42,6 @@ export const Users: CollectionConfig = {
       label: 'WhatsApp/Contact Number',
       type: 'text',
     },
-    {
-      name: 'academicYear',
-      label: 'Class/Academic Year',
-      type: 'text',
-    },
     // {
     //   name: 'examResults',
     //   type: 'relationship',
@@ -60,53 +51,53 @@ export const Users: CollectionConfig = {
     //     readOnly: true,
     //   },
     // },
-    {
-      name: 'overallPerformance',
-      type: 'array',
-      fields: [//add subject wise performance later
-        {
-          name: 'averageScore',
-          type: 'number',
-          admin: {
-            readOnly: true,
-          },
-        },
-        {
-          name: 'totalAttempts',
-          type: 'number',
-          admin: {
-            readOnly: true,
-          },
-        },
-        {
-          name: 'successfulAttempts',
-          type: 'number',
-          admin: {
-            readOnly: true,
-          },
-        },
-        {
-          name: 'lastExamDate',
-          type: 'date',
-          admin: {
-            readOnly: true,
-          },
-        },
-      ],
-      admin: {
-        readOnly: true,
-      },
-    },
+    // {
+    //   name: 'overallPerformance',
+    //   type: 'array',
+    //   fields: [//add subject wise performance later
+    //     {
+    //       name: 'averageScore',
+    //       type: 'number',
+    //       admin: {
+    //         readOnly: true,
+    //       },
+    //     },
+    //     {
+    //       name: 'totalAttempts',
+    //       type: 'number',
+    //       admin: {
+    //         readOnly: true,
+    //       },
+    //     },
+    //     {
+    //       name: 'successfulAttempts',
+    //       type: 'number',
+    //       admin: {
+    //         readOnly: true,
+    //       },
+    //     },
+    //     {
+    //       name: 'lastExamDate',
+    //       type: 'date',
+    //       admin: {
+    //         readOnly: true,
+    //       },
+    //     },
+    //   ],
+    //   admin: {
+    //     readOnly: true,
+    //   },
+    // },
   ],
   endpoints: [
   {
     path: '/send-signup-email',
     method: 'post',
     handler: async (req) => {
-      const { email, firstName, lastName, institution, password, contactNumber, academicYear } = await req.json?.();
+      const { email, firstName, lastName, password, contactNumber } = await req.json?.();
 
       // Validate required fields
-      if (!email || !firstName || !institution || !password || !contactNumber || !academicYear) {
+      if (!email || !firstName || !password || !contactNumber) {
         return Response.json({ error: 'Missing required fields' }, { status: 400 });
       }
 
@@ -115,9 +106,7 @@ export const Users: CollectionConfig = {
         `email=${encodeURIComponent(email)}&` +
         `password=${encodeURIComponent(password)}&` +
         `name=${encodeURIComponent(firstName + ' ' + lastName)}&` +
-        `institution=${encodeURIComponent(institution)}&` +
-        `contactNumber=${encodeURIComponent(contactNumber)}&` +
-        `academicYear=${encodeURIComponent(academicYear)}`;
+        `contactNumber=${encodeURIComponent(contactNumber)}`;
 
       try {
         await req.payload.sendEmail({
@@ -128,9 +117,7 @@ export const Users: CollectionConfig = {
             <p><strong>First Name:</strong> ${firstName}</p>
             <p><strong>Last Name:</strong> ${lastName}</p>
             <p><strong>Email:</strong> ${email}</p>
-            <p><strong>Institution:</strong> ${institution}</p>
             <p><strong>Contact Number:</strong> ${contactNumber}</p>
-            <p><strong>Academic Year:</strong> ${academicYear}</p>
 
             <a href="${confirmSignupUrl}" style="display:inline-block;padding:10px 20px;background-color:#007bff;color:white;text-decoration:none;border-radius:5px;">
               Confirm Signup
@@ -154,9 +141,8 @@ export const Users: CollectionConfig = {
     const email = url.searchParams.get('email');
     const password = url.searchParams.get('password');
     const name = url.searchParams.get('name');
-    const institution = url.searchParams.get('institution');
-
-    const data = { email, password, name, institution };
+    const contactNumber = url.searchParams.get('contactNumber');
+    const data = { email, password, name, contactNumber};
     const baseUrl = process.env.NEXT_PUBLIC_SERVER_URL ;
     try {
       const response = await fetch(`${baseUrl}/api/users`, {
