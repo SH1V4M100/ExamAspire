@@ -69,6 +69,15 @@ const SingleChoiceQuestion: React.FC<SingleChoiceQuestionProps> = ({
           );
         })}
       </div>
+     <div className="mt-4">
+  <button
+    onClick={() => onAnswerChange(question.id, [])}
+    className="px-3 py-1.5 text-sm rounded-md border border-indigo-200 bg-white text-indigo-600 hover:bg-indigo-50 transition-colors shadow-sm"
+  >
+    Clear Selection
+  </button>
+</div>
+
     </div>
   );
 };

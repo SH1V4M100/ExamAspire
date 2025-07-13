@@ -77,6 +77,12 @@ const MultipleChoiceQuestion: React.FC<MultipleChoiceQuestionProps> = ({
           );
         })}
       </div>
+      <button
+      onClick={() => onAnswerChange(question.id, [])}
+      className="mt-4 text-sm text-red-600 hover:underline"
+    >
+      Clear Selection
+    </button>
     </div>
   );
 };
