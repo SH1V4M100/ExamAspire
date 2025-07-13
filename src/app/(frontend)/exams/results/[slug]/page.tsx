@@ -20,10 +20,14 @@ function ResultSlugPage() {
 
         if (!res.ok) throw new Error('Failed to fetch attempt');
         const data = await res.json();
-        
+        console.log(data)
         setExamData({
           exam: data.exam,
-          answers: data.answers
+          answers: data.answers,
+          score: data.score,
+          mathsTotal: data.mathsTotal,
+          physicsTotal: data.physicsTotal,
+          chemistryTotal: data.chemistryTotal
         });
       } catch (err: unknown) {
         if (err instanceof Error) {

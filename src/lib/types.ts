@@ -62,6 +62,10 @@ export interface AnswersType {
 export interface ExamData {
   exam: Exam;
   answers: AnswersType;
+  score: number;
+  chemistryTotal: number;
+  physicsTotal: number;
+  mathsTotal: number;
 }
 export interface UserAnswer {
   questionId: string;

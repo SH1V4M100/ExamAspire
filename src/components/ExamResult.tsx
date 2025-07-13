@@ -47,8 +47,11 @@ const ExamResult: React.FC<ExamResultProps> = ({ examData, slug }) => {
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-5xl">
-      <ExamResCard exam={examData.exam} score={score} />
-      
+      <ExamResCard 
+  exam={examData.exam} 
+  score={{ obtained: examData.score, total: examData.chemistryTotal+examData.physicsTotal+examData.mathsTotal }} 
+/>
+
       <div className="mt-8 bg-white rounded-lg shadow-md overflow-hidden">
         <div className="flex border-b">
           <button 
@@ -72,7 +75,7 @@ const ExamResult: React.FC<ExamResultProps> = ({ examData, slug }) => {
               <SectionResults examData={examData} />
             </div>
           ) : (
-            <Leaderboard currentScore={score.percentage} slug={(examData.exam.id).toString()}/>
+            <Leaderboard currentScore={examData.score} slug={(examData.exam.id).toString()}/>
           )}
         </div>
       </div>
