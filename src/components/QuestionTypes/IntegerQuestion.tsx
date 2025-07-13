@@ -66,10 +66,10 @@ const IntegerQuestion: React.FC<IntegerQuestionProps> = ({
   );
 
   const selectedId = matchingCorrectOption?.id ?? finalValue;
-console.log(selectedId)
+//console.log(selectedId)
   // ✅ Send ID to parent for evaluation logic
   onAnswerChange(question.id, [selectedId]);
-console.log(finalValue)
+//console.log(finalValue)
   // ✅ Keep user-visible value for internal state and display
   setConfirmedValue(finalValue);
 } else {

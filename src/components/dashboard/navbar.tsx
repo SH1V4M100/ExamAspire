@@ -90,7 +90,7 @@ export function Navbar() {
   }, [currentUser]);
 
   const handleDropdownOpen = async () => {
-    console.log('clicked')
+    //console.log('clicked')
     if (!currentUser) return;
   
     try {

@@ -53,7 +53,7 @@ export default function LoginPage() {
         throw new Error('Failed to login');
       }
       const resjson: AuthResponse = await response.json();
-      console.log(resjson);
+      //console.log(resjson);
       // Redirect to dashboard on success
       window.location.href = '/dashboard';
     } catch (err) {
