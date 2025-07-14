@@ -98,18 +98,18 @@ if (now < start) {
   );
 }
 
-if (now > end) {
-  return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <div className="text-center max-w-md p-6 bg-white shadow-md rounded">
-        <h2 className="text-2xl font-semibold text-gray-800 mb-4">Exam Expired</h2>
-        <p className="text-gray-600">
-          This exam was available until <strong>{end.toLocaleString()}</strong>.
-        </p>
-      </div>
-    </div>
-  );
-}
+// if (now > end) {
+//   return (
+//     <div className="min-h-screen flex items-center justify-center bg-gray-50">
+//       <div className="text-center max-w-md p-6 bg-white shadow-md rounded">
+//         <h2 className="text-2xl font-semibold text-gray-800 mb-4">Exam Expired</h2>
+//         <p className="text-gray-600">
+//           This exam was available until <strong>{end.toLocaleString()}</strong>.
+//         </p>
+//       </div>
+//     </div>
+//   );
+// }
 
 // If all good, render the actual ExamAttempt
   return <ExamAttempt exam={exam} />;

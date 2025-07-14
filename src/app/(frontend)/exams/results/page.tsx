@@ -26,7 +26,7 @@ export default function ResultsPage() {
           credentials: 'include',
         });
         const data = await response.json();
-        console.log('User Exam Attempts:', data);
+        //console.log('User Exam Attempts:', data);
         setExamResults(data.attempts || []);
       } catch (error) {
         console.error('Error fetching user exam attempts:', error);

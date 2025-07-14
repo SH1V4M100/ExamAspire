@@ -20,7 +20,7 @@ function ResultSlugPage() {
 
         if (!res.ok) throw new Error('Failed to fetch attempt');
         const data = await res.json();
-        console.log(data)
+        //console.log(data)
         setExamData({
           exam: data.exam,
           answers: data.answers,
