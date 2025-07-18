@@ -123,33 +123,74 @@ export function Navbar() {
   return (
     <nav className="sticky top-0 z-30 flex h-16 w-full items-center justify-between border-b bg-background/95 px-4 backdrop-blur-sm transition-all md:px-6">
       <div className="flex items-center gap-2 md:gap-4">
-        <Link 
-          href="/dashboard" 
-          className="flex items-center gap-2 font-semibold"
-        >
-          <GraduationCap className="h-6 w-6" />
-          <span className="hidden md:inline-block">ExamAspire</span>
-        </Link>
-
-        <div className="hidden md:flex md:items-center md:gap-4 md:pl-4">
-          {navItems.map((item) => {
-            const isActive = pathname === item.href;
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={cn(
-                  "flex items-center gap-2 text-sm font-medium transition-colors hover:text-primary",
-                  isActive ? "text-primary" : "text-muted-foreground"
-                )}
+      {/* Mobile Hamburger Menu - shown only on mobile */}
+      <div className="md:hidden">
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" size="icon">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-5 w-5"
+                viewBox="0 0 20 20"
+                fill="currentColor"
               >
-                <item.icon className="h-4 w-4" />
-                {item.name}
-              </Link>
-            );
-          })}
-        </div>
+                <path
+                  fillRule="evenodd"
+                  d="M3 5h14a1 1 0 010 2H3a1 1 0 110-2zm0 4h14a1 1 0 010 2H3a1 1 0 110-2zm0 4h14a1 1 0 010 2H3a1 1 0 110-2z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="start">
+            {navItems.map((item) => (
+              <DropdownMenuItem asChild key={item.href}>
+                <Link
+                  href={item.href}
+                  className={cn(
+                    "flex items-center gap-2 text-sm font-medium transition-colors hover:text-primary",
+                    pathname === item.href ? "text-primary" : "text-muted-foreground"
+                  )}
+                >
+                  <item.icon className="h-4 w-4" />
+                  {item.name}
+                </Link>
+              </DropdownMenuItem>
+            ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
+
+      {/* Logo (ExamAspire) */}
+      <Link
+        href="/dashboard"
+        className="flex items-center gap-2 font-semibold"
+      >
+        <GraduationCap className="h-6 w-6" />
+        <span className="hidden md:inline-block">ExamAspire</span>
+      </Link>
+
+      {/* Desktop Nav Links */}
+      <div className="hidden md:flex md:items-center md:gap-4 md:pl-4">
+        {navItems.map((item) => {
+          const isActive = pathname === item.href;
+          return (
+            <Link
+              key={item.href}
+              href={item.href}
+              className={cn(
+                "flex items-center gap-2 text-sm font-medium transition-colors hover:text-primary",
+                isActive ? "text-primary" : "text-muted-foreground"
+              )}
+            >
+              <item.icon className="h-4 w-4" />
+              {item.name}
+            </Link>
+          );
+        })}
+      </div>
+    </div>
+
 
       <div className="flex items-center gap-4">
         {/* Notifications Dropdown */}
