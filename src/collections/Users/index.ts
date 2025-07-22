@@ -28,15 +28,15 @@ export const Users: CollectionConfig = {
       name: 'name',
       type: 'text',
     },
-    {
-      name: 'completedExams',
-      type: 'relationship',
-      relationTo: 'exams',
-      hasMany: true,
-      admin: {
-        readOnly: true,
-      },
-    },
+    // {
+    //   name: 'completedExams',
+    //   type: 'relationship',
+    //   relationTo: 'exams',
+    //   hasMany: true,
+    //   admin: {
+    //     readOnly: true,
+    //   },
+    // },
     {
       name: 'contactNumber',
       label: 'WhatsApp/Contact Number',

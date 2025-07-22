@@ -18,10 +18,32 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
+  if (request.nextUrl.pathname.startsWith('/evaluate')) {
+    try {
+      const res = await fetch(`${PAYLOAD_URL}/api/admin/me`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!res.ok) {
+        return NextResponse.redirect(new URL('/unauthorized', request.url));
+      }
+
+      const data = await res.json();
+      if (!data?.user?.id ) {
+        return NextResponse.redirect(new URL('/unauthorized', request.url));
+      }
+
+      return NextResponse.next(); 
+    } catch (error) {
+      return NextResponse.redirect(new URL('/unauthorized', request.url));
+    }
+  }
   // Allow other routes to pass through
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ['/dashboard/:path*', '/exams/:path*'],
+  matcher: ['/dashboard/:path*', '/exams/:path*', '/evaluate/:path*'],
 };

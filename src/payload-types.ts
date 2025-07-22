@@ -279,7 +279,6 @@ export interface Media {
 export interface User {
   id: number;
   name?: string | null;
-  completedExams?: (number | Exam)[] | null;
   contactNumber?: string | null;
   updatedAt: string;
   createdAt: string;
@@ -902,7 +901,6 @@ export interface ExamsSelect<T extends boolean = true> {
  */
 export interface UsersSelect<T extends boolean = true> {
   name?: T;
-  completedExams?: T;
   contactNumber?: T;
   updatedAt?: T;
   createdAt?: T;

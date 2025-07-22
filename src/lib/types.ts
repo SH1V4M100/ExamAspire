@@ -81,4 +81,46 @@ export interface ExamAttemptState {
   startTime: number;
   examStarted: boolean;
 }
+
 export type ExamStatus = 'upcoming' | 'active' | 'expired';
+
+export interface ExamAttempt {
+  id: number;
+  user: User;
+  exam: Exam;
+  score: number;
+  totalMarks: number;
+  physicsScore: number;
+  physicsTotal: number;
+  chemistryScore: number;
+  chemistryTotal: number;
+  mathsScore: number;
+  mathsTotal: number;
+  submittedAt: string;
+  updatedAt: string;
+  createdAt: string;
+}
+
+export interface ProcessedAttempt extends ExamAttempt {
+  percentage: number;
+  physicsPercentage: number;
+  chemistryPercentage: number;
+  mathsPercentage: number;
+  isValidSubmission: boolean;
+}
+
+export interface User {
+  id: number;
+  name: string;
+  totalAttempts: number;
+  contactNumber: string;
+  email: string;
+}
+
+export type StudentPerformance = {
+  student: User;
+  attempts: ProcessedAttempt[];
+  bestPercentage: number;
+  averagePercentage: number;
+  totalExams: number;
+};

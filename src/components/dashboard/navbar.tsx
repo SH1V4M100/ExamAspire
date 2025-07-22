@@ -163,7 +163,7 @@ export function Navbar() {
 
       {/* Logo (ExamAspire) */}
       <Link
-        href="/dashboard"
+        href="/"
         className="flex items-center gap-2 font-semibold"
       >
         <GraduationCap className="h-6 w-6" />
