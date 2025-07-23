@@ -1,5 +1,5 @@
 import type { CollectionConfig } from 'payload'
-
+import EvaluateButton from '@/components/ui/eval-btn'
 import { authenticated } from '../../access/authenticated'
 import { anyone } from '@/access/anyone'
 
@@ -15,6 +15,9 @@ export const Users: CollectionConfig = {
   admin: {
     defaultColumns: ['name', 'email'],
     useAsTitle: 'name',
+    components: {
+      beforeListTable: ['src/components/ui/eval-btn.tsx'], // injects your button into the list toolbar
+    },
   },
   auth: true,
   fields: [

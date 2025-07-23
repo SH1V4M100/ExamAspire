@@ -40,7 +40,7 @@ export function ExamHistory({ attempts }: ExamHistoryProps) {
 
       <div className="space-y-4">
         {sortedAttempts.map((attempt) => (
-          <div key={attempt.id} className="border-l-4 border-blue-500 bg-gray-900 p-4 rounded-r-lg">
+          <div key={attempt.id} className="border-l-4 border-blue-500 bg-grey-990 p-4 rounded-r-lg">
             <div className="flex items-start justify-between mb-3">
               <div>
                 <h4 className="font-semibold">{attempt.exam.title}</h4>
