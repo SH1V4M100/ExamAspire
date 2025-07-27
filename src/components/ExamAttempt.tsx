@@ -34,7 +34,14 @@ const ExamAttempt: React.FC<ExamAttemptProps> = ({ exam }) => {
   const [showInstructions, setShowInstructions] = useState(true);
   const [showSubmitModal, setShowSubmitModal] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
-  
+
+  useEffect(() => {
+  if (remainingTime === 0 && isExamStarted && !isSubmitted) {
+    submitExam();
+    setIsSubmitted(true);
+  }
+  }, [remainingTime, isExamStarted, isSubmitted, submitExam]);
+
   const handleStartExam = () => {
     startExam();
     setShowInstructions(false);
@@ -76,13 +83,6 @@ const ExamAttempt: React.FC<ExamAttemptProps> = ({ exam }) => {
       </div>
     );
   }
-  
-  useEffect(() => {
-  if (remainingTime === 0 && isExamStarted && !isSubmitted) {
-    submitExam();
-    setIsSubmitted(true);
-  }
-}, [remainingTime, isExamStarted, isSubmitted, submitExam]);
 
   if (showInstructions) {
     //console.log(exam.instructions)
