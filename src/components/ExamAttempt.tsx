@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Exam } from '@/lib/types';
 import { useExamState } from '@/app/(frontend)/exams/useExamState';
 import ExamHeader from './ExamHeader';
@@ -77,6 +77,13 @@ const ExamAttempt: React.FC<ExamAttemptProps> = ({ exam }) => {
     );
   }
   
+  useEffect(() => {
+  if (remainingTime === 0 && isExamStarted && !isSubmitted) {
+    submitExam();
+    setIsSubmitted(true);
+  }
+}, [remainingTime, isExamStarted, isSubmitted, submitExam]);
+
   if (showInstructions) {
     //console.log(exam.instructions)
     return (
