@@ -16,34 +16,90 @@ const ExamResult: React.FC<ExamResultProps> = ({ examData, slug }) => {
   
   // Calculate total score
   const calculateScore = () => {
-    let correct = 0;
-    let total = 0;
-    
-    examData.exam.sections.forEach(section => {
-      section.questions.forEach(question => {
-        total++;
-        
-        const userAnswer = examData.answers[question.id];
-        if (!userAnswer) return;
-        
-        const correctOptionIds = question.options
-          .filter(option => option.isCorrect)
-          .map(option => option.id);
-          
-        const selectedOptionIds = userAnswer.selectedOptionIds || [];
-        
-        // Check if arrays have the same values (simple version)
-        if (correctOptionIds.length === selectedOptionIds.length && 
-            correctOptionIds.every(id => selectedOptionIds.includes(id))) {
-          correct++;
-        }
-      });
+  let score = 0;
+  let totalMarks = 0;
+
+  const sectionScores = examData.exam.sections.map(section => {
+    let sectionScore = 0;
+    let sectionTotal = 0;
+
+    section.questions.forEach(question => {
+      const userAnswer = examData.answers[question.id];
+      const correctOptions = question.options.filter(opt => opt.isCorrect).map(opt => opt.id);
+
+      const selected = userAnswer?.selectedOptionIds || [];
+
+      const isCorrect =
+        selected.length > 0 &&
+        selected.length === correctOptions.length &&
+        selected.every(id => correctOptions.includes(id));
+
+      switch (question.questionType) {
+        case 'single 1':
+          sectionTotal += 1;
+          if (selected.length > 0) sectionScore += isCorrect ? 1 : -0.25;
+          break;
+
+        case 'single 2':
+          sectionTotal += 2;
+          if (selected.length > 0) sectionScore += isCorrect ? 2 : -0.5;
+          break;
+
+        case 'single 4':
+          sectionTotal += 4;
+          if (selected.length > 0) sectionScore += isCorrect ? 4 : -1;
+          break;
+
+        case 'multi':
+          sectionTotal += 2;
+          if (selected.length > 0) {
+            const correctSet = new Set(correctOptions);
+            const hasIncorrect = selected.some(id => !correctSet.has(id));
+            const correctSelected = selected.filter(id => correctSet.has(id)).length;
+            const totalCorrect = correctOptions.length;
+
+            if (hasIncorrect) {
+              sectionScore += 0;
+            } else if (correctSelected === totalCorrect) {
+              sectionScore += 2;
+            } else if (correctSelected > 0) {
+              sectionScore += (2 * correctSelected) / totalCorrect;
+            }
+          }
+          break;
+
+        case 'integer':
+          sectionTotal += 4;
+          if (isCorrect) {
+            sectionScore += 4;
+          } else {
+            sectionScore -= 1;
+          }
+          break;
+      }
     });
-    
-    return { correct, total, percentage: Math.round((correct / total) * 100) };
+
+    // Accumulate total score and marks
+    score += sectionScore;
+    totalMarks += sectionTotal;
+
+    return {
+      subject: section.subject,
+      score: Math.max(0, sectionScore),
+      total: sectionTotal,
+      percentage: sectionTotal > 0 ? Math.round((Math.max(0, sectionScore) / sectionTotal) * 100) : 0
+    };
+  });
+
+  return {
+    score: Math.max(0, score),
+    totalMarks,
+    sectionScores
   };
+};
+
   
-  const score = calculateScore();
+  const result = calculateScore();
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-5xl">
@@ -71,7 +127,15 @@ const ExamResult: React.FC<ExamResultProps> = ({ examData, slug }) => {
         <div className="p-4 md:p-6">
           {activeTab === 'results' ? (
             <div className="space-y-8">
-              <ScoreSummary score={score} sections={examData.exam.sections} answers={examData.answers} />
+            <ScoreSummary
+              score={{
+                correct: result.score,
+                total: result.totalMarks,
+                percentage: result.totalMarks > 0 ? Math.round((result.score / result.totalMarks) * 100) : 0
+              }}
+              sectionScores={result.sectionScores}
+            />
+
               <SectionResults examData={examData} />
             </div>
           ) : (

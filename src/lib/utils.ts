@@ -84,7 +84,7 @@ export const clearExamState = (): void => {
 };
 
 export function processExamAttempts(attempts: ExamAttempt[]): ProcessedAttempt[] {
-  console.log(attempts)
+  //console.log(attempts)
   return attempts.map(attempt => ({
     ...attempt,
     percentage: (attempt.score / attempt.totalMarks) * 100,

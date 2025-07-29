@@ -202,7 +202,7 @@ export const Exams: CollectionConfig = {
     afterChange: [
       async ({ doc, operation, req }) => {
         if (operation === 'create'||operation==='update' && doc._status === 'published') {
-          console.log('afterChange hook called')
+          //console.log('afterChange hook called')
           await req.payload.create({
             collection: 'notifications',
             data: {

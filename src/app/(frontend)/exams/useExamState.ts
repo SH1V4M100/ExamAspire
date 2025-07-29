@@ -216,7 +216,7 @@ export const useExamState = (exam: Exam) => {
   
         switch (question.questionType) {
           case 'single 1':
-            if (userAnswer && userAnswer.selectedOptionIds) {
+            if (userAnswer && userAnswer.selectedOptionIds && userAnswer.selectedOptionIds.length > 0) {
               const delta = isCorrect ? 1 : -0.25;
               score += delta;
               subjectScores[subjectKey].score += delta;
@@ -226,7 +226,7 @@ export const useExamState = (exam: Exam) => {
             break;
             
           case 'single 2':
-            if (userAnswer && userAnswer.selectedOptionIds) {
+            if (userAnswer && userAnswer.selectedOptionIds && userAnswer.selectedOptionIds.length > 0) {
               const delta = isCorrect ? 2 : -0.5;
               score += delta;
               subjectScores[subjectKey].score += delta;
@@ -236,7 +236,7 @@ export const useExamState = (exam: Exam) => {
             break;
           
           case 'single 4':
-            if (userAnswer && userAnswer.selectedOptionIds) {
+            if (userAnswer && userAnswer.selectedOptionIds && userAnswer.selectedOptionIds.length > 0) {
               const delta = isCorrect ? 4 : -1;
               score += delta;
               subjectScores[subjectKey].score += delta;
@@ -249,7 +249,7 @@ export const useExamState = (exam: Exam) => {
             totalMarks += 2;
             subjectScores[subjectKey].total += 2;
         
-            if (userAnswer && userAnswer.selectedOptionIds) {
+            if (userAnswer && userAnswer.selectedOptionIds && userAnswer.selectedOptionIds.length > 0) {
               const selected = userAnswer.selectedOptionIds;
               const correctSet = new Set(correctOptions);
               const selectedSet = new Set(selected);
