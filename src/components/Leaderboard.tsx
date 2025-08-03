@@ -28,6 +28,7 @@ const Leaderboard: React.FC<LeaderboardProps> = ({ currentScore, slug }) => {
         const data = await response.json();
         const sortedData = data.scores.sort((a: { score: number; }, b: { score: number; }) => b.score - a.score); // Sort by score descending
         setLeaderboardData(sortedData);
+        console.log(sortedData)
         //setLeaderboardData(data.scores);
       } catch (error) {
         console.error('Error fetching scores:', error);
@@ -72,7 +73,7 @@ const Leaderboard: React.FC<LeaderboardProps> = ({ currentScore, slug }) => {
                   <div className="text-sm text-gray-500">{entry.user.institution}</div>
                 </div>
               </div>
-              <div className="text-black font-medium">{entry.score}%</div>
+              <div className="text-black font-medium">{entry.score}</div>
             </div>
           ))}
           
