@@ -1,5 +1,5 @@
 ````markdown
-# Exam Management System
+# Exam Aspire
 
 ## Overview
 A full-stack exam platform built with **Next.js** and **Payload CMS** that provides secure exam creation, real-time timed exam attempts, automated scoring, and detailed performance analytics.  
@@ -137,8 +137,3 @@ Pull requests are welcome!
 For significant changes, please open an **issue** first to discuss your proposed updates.
 
 ---
-
-## 📄 License
-
-This project is licensed under the [MIT License](LICENSE).
-````

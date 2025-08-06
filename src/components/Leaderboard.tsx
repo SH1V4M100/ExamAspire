@@ -55,18 +55,32 @@ const Leaderboard: React.FC<LeaderboardProps> = ({ currentScore, slug }) => {
       
       {/* Leaderboard */}
       <div className="bg-white rounded-lg shadow overflow-hidden">
-        <div className="px-4 py-3 bg-gray-50 border-b border-gray-200 flex items-center">
-          <Users className="w-4 h-4 text-gray-500 mr-2" />
-          <h3 className="font-medium text-gray-700">All Participants</h3>
+        <div className="px-4 py-3 bg-gray-50 border-b border-gray-200 flex items-center justify-between">
+          {/* Left: Icon + Participant Name */}
+          <div className="flex items-center">
+            <Users className="w-4 h-4 text-gray-500 mr-2" />
+            <h3 className="font-medium text-gray-700">Participant Name</h3>
+          </div>
+          {/* Right: Score heading */}
+          <div className="font-medium text-gray-700">Score</div>
         </div>
         
         <div className="divide-y divide-gray-100">
           {leaderboardData.map((entry, index) => (
-            <div key={entry.user.id} className="px-4 py-3 flex items-center justify-between hover:bg-gray-50">
+            <div
+              key={entry.user.id}
+              className="px-4 py-3 flex items-center justify-between hover:bg-gray-50"
+            >
               <div className="flex items-center">
-                <div className="w-6 text-center text-gray-500 font-medium">{index + 1}</div>
+                <div className="w-6 text-center text-gray-500 font-medium">
+                  {index + 1}
+                </div>
                 <div className="w-8 h-8 ml-3 bg-gray-200 rounded-full overflow-hidden">
-                  <img src={`https://ui-avatars.com/api/?name=${entry.user.name.replace(' ', '+')}&background=random`} alt={entry.user.name} className="w-full h-full object-cover" />
+                  <img
+                    src={`https://ui-avatars.com/api/?name=${entry.user.name.replace(" ", "+")}&background=random`}
+                    alt={entry.user.name}
+                    className="w-full h-full object-cover"
+                  />
                 </div>
                 <div className="ml-3 text-black">
                   <div>{entry.user.name}</div>
@@ -76,11 +90,13 @@ const Leaderboard: React.FC<LeaderboardProps> = ({ currentScore, slug }) => {
               <div className="text-black font-medium">{entry.score}</div>
             </div>
           ))}
-          
+
           {/* User's position indicator */}
           <div className="px-4 py-3 bg-blue-50 border-l-4 border-blue-500 flex items-center justify-between">
             <div className="flex items-center">
-              <div className="w-6 text-center text-blue-600 font-medium">{userRank}</div>
+              <div className="w-6 text-center text-blue-600 font-medium">
+                {userRank}
+              </div>
               <div className="w-8 h-8 ml-3 bg-blue-200 rounded-full overflow-hidden flex items-center justify-center">
                 <span className="text-blue-700 font-bold text-sm">YOU</span>
               </div>
