@@ -1,4 +1,4 @@
-````markdown
+
 # Exam Aspire
 
 ## Overview
@@ -135,5 +135,3 @@ src/
 
 Pull requests are welcome!  
 For significant changes, please open an **issue** first to discuss your proposed updates.
-
-````
