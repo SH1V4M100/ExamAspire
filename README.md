@@ -91,6 +91,8 @@ Designed for educational institutions and e-learning platforms, the system ensur
 
 ## 🚀 Getting Started
 
+### Step-by-Step Guide
+
 1. **Clone the repository**
    ```bash
    git clone <repository-url>
@@ -98,7 +100,6 @@ Designed for educational institutions and e-learning platforms, the system ensur
    ```
 
 2. **Install dependencies**
-
    ```bash
    npm install
    ```
@@ -109,7 +110,6 @@ Designed for educational institutions and e-learning platforms, the system ensur
    * Fill in required database and CMS credentials
 
 4. **Run development server**
-
    ```bash
    npm run dev
    ```
@@ -133,7 +133,7 @@ src/
 
 ## 🤝 Contributing
 
-Pull requests are welcome!
+Pull requests are welcome!  
 For significant changes, please open an **issue** first to discuss your proposed updates.
 
----
+````
