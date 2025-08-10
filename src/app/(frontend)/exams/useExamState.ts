@@ -2,7 +2,10 @@ import { useState, useEffect, useMemo } from 'react';
 import { Exam, ExamAttemptState, UserAnswer } from '@/lib/types';
 import { saveExamState, loadExamState, clearExamState } from '@/lib/utils';
 type Subject = 'physics' | 'chemistry' | 'maths';
-export const useExamState = (exam: Exam) => {
+  export const useExamState = (exam: Exam) => {
+      const [timeLeft, setTimeLeft] = useState(
+      exam.duration * 60 // initial seconds
+    );
   const initialState: ExamAttemptState = useMemo(() => {
     const savedState = loadExamState(exam.id);
     
@@ -41,16 +44,24 @@ export const useExamState = (exam: Exam) => {
   };
 
   // Calculate remaining time in seconds
-  const remainingTime = useMemo(() => {
+  useEffect(() => {
     if (!examState.examStarted) {
-      return exam.duration * 60; // Return full duration if exam hasn't started
+      setTimeLeft(exam.duration * 60);
+      return;
     }
-    
-    const elapsedMs = Date.now() - examState.startTime;
-    const durationMs = exam.duration * 60 * 1000;
-    const remainingMs = Math.max(0, durationMs - elapsedMs);
-    return Math.floor(remainingMs / 1000);
+
+    const interval = setInterval(() => {
+      const elapsedMs = Date.now() - examState.startTime;
+      const durationMs = exam.duration * 60 * 1000;
+      const remainingMs = Math.max(0, durationMs - elapsedMs);
+      setTimeLeft(Math.floor(remainingMs / 1000));
+    }, 1000);
+
+    return () => clearInterval(interval);
   }, [exam.duration, examState.startTime, examState.examStarted]);
+
+  // replace your current useMemo with this:
+  const remainingTime = timeLeft;
 
   // Save state to localStorage whenever it changes
   useEffect(() => {

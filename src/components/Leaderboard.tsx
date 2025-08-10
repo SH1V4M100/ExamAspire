@@ -102,7 +102,7 @@ const Leaderboard: React.FC<LeaderboardProps> = ({ currentScore, slug }) => {
               </div>
               <div className="ml-3 text-black font-medium">Your Score</div>
             </div>
-            <div className="font-bold text-blue-600">{currentScore}%</div>
+            <div className="font-bold text-blue-600">{currentScore}</div>
           </div>
         </div>
       </div>

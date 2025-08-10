@@ -36,11 +36,12 @@ const ExamAttempt: React.FC<ExamAttemptProps> = ({ exam }) => {
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   useEffect(() => {
-  if (remainingTime === 0 && isExamStarted && !isSubmitted) {
+  if (remainingTime <= 0 && isExamStarted && !isSubmitted) {
     submitExam();
     setIsSubmitted(true);
   }
-  }, [remainingTime, isExamStarted, isSubmitted, submitExam]);
+}, [remainingTime, isExamStarted, isSubmitted, submitExam]);
+
 
   const handleStartExam = () => {
     startExam();
