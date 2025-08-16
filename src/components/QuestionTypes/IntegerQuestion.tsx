@@ -32,7 +32,7 @@ const IntegerQuestion: React.FC<IntegerQuestionProps> = ({
   //   }
   // }, [userAnswer]);
 
-  const handleNumberClick = (digit: string) => {console.log(userAnswer)
+  const handleNumberClick = (digit: string) => {//console.log(userAnswer)
     setInputValue(prev => {
       if (prev === '0') return digit; // replace leading 0
       if (prev.length < 10) return prev + digit; // limit input length
@@ -66,10 +66,10 @@ const IntegerQuestion: React.FC<IntegerQuestionProps> = ({
   );
 
   const selectedId = matchingCorrectOption?.id ?? finalValue;
-console.log(selectedId)
+//console.log(selectedId)
   // ✅ Send ID to parent for evaluation logic
   onAnswerChange(question.id, [selectedId]);
-console.log(matchingCorrectOption)
+//console.log(matchingCorrectOption)
   // ✅ Keep user-visible value for internal state and display
   setConfirmedValue(finalValue);
 } else {
