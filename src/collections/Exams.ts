@@ -166,8 +166,8 @@ export const Exams: CollectionConfig = {
       return 'Multiple correct questions must have at least one correct option.';
     }
 
-    if (questionType === 'integer' && typedOptions.length > 0) {
-      return 'Integer type questions should not have any options.';
+    if (questionType === 'integer' && typedOptions.length == 0) {
+      return 'Integer type questions should have 1 correct option (write correct answer as option text)';
     }
 
     return true;
