@@ -4,7 +4,7 @@ import { CollectionConfig } from 'payload';
 export const ExamAttempts: CollectionConfig = {
   slug: 'exam-attempts',
   admin: {
-    hidden: false
+    hidden: true
   },
   fields: [
     {
