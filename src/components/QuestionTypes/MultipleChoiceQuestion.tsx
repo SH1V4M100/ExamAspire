@@ -1,6 +1,8 @@
 import React from 'react';
 import { Question, UserAnswer } from '@/lib/types';
 import { Check } from 'lucide-react';
+import ReactMarkdown from 'react-markdown';
+import rehypeRaw from 'rehype-raw';
 
 interface MultipleChoiceQuestionProps {
   question: Question;
@@ -29,7 +31,9 @@ const MultipleChoiceQuestion: React.FC<MultipleChoiceQuestionProps> = ({
   return (
     <div className="space-y-6 text-black">
       <div className="text-lg font-medium mb-4">
-        {question.questionText}
+        <ReactMarkdown rehypePlugins={[rehypeRaw]}>
+          {question.questionText}
+        </ReactMarkdown>
       </div>
       
       {question.image && (
@@ -72,17 +76,22 @@ const MultipleChoiceQuestion: React.FC<MultipleChoiceQuestionProps> = ({
                   {isSelected && <Check size={14} className="text-white" />}
                 </div>
               </div>
-              <div className="flex-1 text-black">{option.text}</div>
+              <div className="flex-1 text-black">
+                <ReactMarkdown rehypePlugins={[rehypeRaw]}>
+                  {option.text}
+                </ReactMarkdown>
+              </div>
             </div>
           );
         })}
       </div>
+      
       <button
-      onClick={() => onAnswerChange(question.id, [])}
-      className="mt-4 text-sm text-red-600 hover:underline"
-    >
-      Clear Selection
-    </button>
+        onClick={() => onAnswerChange(question.id, [])}
+        className="mt-4 text-sm text-red-600 hover:underline"
+      >
+        Clear Selection
+      </button>
     </div>
   );
 };

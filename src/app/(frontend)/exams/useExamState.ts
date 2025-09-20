@@ -201,7 +201,7 @@ type Subject = 'physics' | 'chemistry' | 'maths';
       let totalMarks = 0;
       // ✅ Skip actual submission if exam.id === 1
       if (exam.id === -1) {
-        console.log('Skipping exam submission due to mock exam');
+        //console.log('Skipping exam submission due to mock exam');
         clearExamState();
         return { success: true, message: 'Exam not submitted (mock mode).' };
       }
@@ -224,7 +224,9 @@ type Subject = 'physics' | 'chemistry' | 'maths';
           JSON.stringify([...correctOptions].sort());
   
         const subjectKey = question.subject as Subject; // physics / chemistry / maths
-  
+        // console.log(question)
+        // console.log(userAnswer, correctOptions, isCorrect)
+        // console.log("score: ",score)
         switch (question.questionType) {
           case 'single 1':
             if (userAnswer && userAnswer.selectedOptionIds && userAnswer.selectedOptionIds.length > 0) {
@@ -285,17 +287,21 @@ type Subject = 'physics' | 'chemistry' | 'maths';
             break;
         
           case 'integer':
-            if (isCorrect) {
-              score += 4;
-              subjectScores[subjectKey].score += 4;
-            }
-            else{
-              score -= 1;
-              subjectScores[subjectKey].score -= 1;
-            }
             totalMarks += 4;
             subjectScores[subjectKey].total += 4;
+
+            if (userAnswer && userAnswer.selectedOptionIds.length > 0) {
+              if (isCorrect) {
+                score += 4;
+                subjectScores[subjectKey].score += 4;
+              } else {
+                score -= 1;
+                subjectScores[subjectKey].score -= 1;
+              }
+            }
+            // else: unattempted → no penalty
             break;
+
         
           default:
             console.warn(`Unknown question type: ${question.questionType}`);
@@ -309,7 +315,7 @@ type Subject = 'physics' | 'chemistry' | 'maths';
       for (const key of Object.keys(subjectScores) as Subject[]) {
         subjectScores[key].score = Math.max(0, subjectScores[key].score);
       }
-  
+      //console.log(score)
       // Prepare submission payload
       const payload = {
         answers: examState.answers,

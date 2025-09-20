@@ -103,14 +103,17 @@ const ExamAttempt: React.FC<ExamAttemptProps> = ({ exam }) => {
             </h2>
             
             {exam.instructions.length > 0 ? (
-              <div className="space-y-4 mb-8">
+              <div className="space-y-4 mb-8 text-gray-700">
                 {exam.instructions
   .filter((instructionObj) => typeof instructionObj.instruction === 'string' && instructionObj.instruction.trim())
   .map((instructionObj, index) => (
-    <p key={index} className="text-gray-700">
-       <ReactMarkdown>{instructionObj.instruction}</ReactMarkdown>
-    </p>
+    <ReactMarkdown 
+      key={index} 
+    >
+      {instructionObj.instruction}
+    </ReactMarkdown>
 ))}
+
 
               </div>
             ) : (

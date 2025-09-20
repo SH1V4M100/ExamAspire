@@ -1,5 +1,7 @@
 import React from 'react';
 import { Question, UserAnswer } from '@/lib/types';
+import ReactMarkdown from 'react-markdown';
+import rehypeRaw from 'rehype-raw';
 
 interface SingleChoiceQuestionProps {
   question: Question;
@@ -18,10 +20,13 @@ const SingleChoiceQuestion: React.FC<SingleChoiceQuestionProps> = ({
 
   return (
     <div className="space-y-6 text-black">
+      {/* Question text with Markdown support */}
       <div className="text-lg font-medium mb-4">
-        {question.questionText}
+        <ReactMarkdown rehypePlugins={[rehypeRaw]}>
+          {question.questionText}
+        </ReactMarkdown>
       </div>
-      
+
       {question.image && (
         <div className="mb-4">
           <img 
@@ -64,20 +69,26 @@ const SingleChoiceQuestion: React.FC<SingleChoiceQuestionProps> = ({
                   )}
                 </div>
               </div>
-              <div className="flex-1 text-black">{option.text}</div>
+
+              {/* Option text with Markdown support */}
+              <div className="flex-1 text-black">
+                <ReactMarkdown rehypePlugins={[rehypeRaw]}>
+                  {option.text}
+                </ReactMarkdown>
+              </div>
             </div>
           );
         })}
       </div>
-     <div className="mt-4">
-  <button
-    onClick={() => onAnswerChange(question.id, [])}
-    className="px-3 py-1.5 text-sm rounded-md border border-indigo-200 bg-white text-indigo-600 hover:bg-indigo-50 transition-colors shadow-sm"
-  >
-    Clear Selection
-  </button>
-</div>
 
+      <div className="mt-4">
+        <button
+          onClick={() => onAnswerChange(question.id, [])}
+          className="px-3 py-1.5 text-sm rounded-md border border-indigo-200 bg-white text-indigo-600 hover:bg-indigo-50 transition-colors shadow-sm"
+        >
+          Clear Selection
+        </button>
+      </div>
     </div>
   );
 };

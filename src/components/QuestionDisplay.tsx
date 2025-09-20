@@ -51,6 +51,7 @@ const QuestionDisplay: React.FC<QuestionDisplayProps> = ({
     case 'integer':
       return (
         <IntegerQuestion
+          key={question.id}
           question={question}
           userAnswer={userAnswer}
           onAnswerChange={onAnswerChange}

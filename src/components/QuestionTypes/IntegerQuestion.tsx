@@ -2,6 +2,8 @@
 import React, { useState, useEffect } from 'react';
 import { Backpack as Backspace, RotateCcw, Minus, Plus, Check } from 'lucide-react';
 import { Question, UserAnswer } from '@/lib/types';
+import ReactMarkdown from 'react-markdown';
+import rehypeRaw from 'rehype-raw';
 
 interface IntegerQuestionProps {
   question: Question;
@@ -19,20 +21,33 @@ const IntegerQuestion: React.FC<IntegerQuestionProps> = ({
   const [confirmedValue, setConfirmedValue] = useState<string>('');
 
   // Initialize input value from existing answer
-  // useEffect(() => {
-  //   const value = userAnswer?.selectedOptionIds?.[0];
-  //   if (value !== undefined) {
-  //     const numValue = parseInt(value);
-  //     if (!isNaN(numValue)) {
-  //       const absValue = Math.abs(numValue).toString();
-  //       setInputValue(absValue);
-  //       setIsNegative(numValue < 0);
-  //       setConfirmedValue(value);
-  //     }
-  //   }
-  // }, [userAnswer]);
+  useEffect(() => {
+    if (userAnswer?.selectedOptionIds?.[0]) {
+      const value = userAnswer.selectedOptionIds[0];
+      // Check if it's a numeric value (not an option ID)
+      if (!isNaN(Number(value))) {
+        const numValue = parseInt(value);
+        if (!isNaN(numValue)) {
+          const absValue = Math.abs(numValue).toString();
+          setInputValue(absValue);
+          setIsNegative(numValue < 0);
+          setConfirmedValue(value);
+        }
+      } else {
+        // If it's an option ID, find the corresponding value
+        const matchingOption = question.options?.find(opt => opt.id === value);
+        if (matchingOption && !isNaN(Number(matchingOption.text))) {
+          const numValue = parseInt(matchingOption.text);
+          const absValue = Math.abs(numValue).toString();
+          setInputValue(absValue);
+          setIsNegative(numValue < 0);
+          setConfirmedValue(matchingOption.text);
+        }
+      }
+    }
+  }, [userAnswer, question.options]);
 
-  const handleNumberClick = (digit: string) => {//console.log(userAnswer)
+  const handleNumberClick = (digit: string) => {
     setInputValue(prev => {
       if (prev === '0') return digit; // replace leading 0
       if (prev.length < 10) return prev + digit; // limit input length
@@ -47,6 +62,8 @@ const IntegerQuestion: React.FC<IntegerQuestionProps> = ({
   const handleClear = () => {
     setInputValue('');
     setIsNegative(false);
+    setConfirmedValue('');
+    onAnswerChange(question.id, []);
   };
 
   const handleToggleSign = () => {
@@ -58,25 +75,24 @@ const IntegerQuestion: React.FC<IntegerQuestionProps> = ({
   const handleConfirm = () => {
     const finalValue = inputValue
       ? (isNegative ? `-${inputValue}` : inputValue)
-      : undefined;
+      : '';
 
     if (finalValue) {
-  const matchingCorrectOption = question.options?.find(
-    (opt) => opt.isCorrect && opt.text === finalValue
-  );
+      const matchingCorrectOption = question.options?.find(
+        (opt) => opt.isCorrect && opt.text === finalValue
+      );
 
-  const selectedId = matchingCorrectOption?.id ?? finalValue;
-//console.log(selectedId)
-  // ✅ Send ID to parent for evaluation logic
-  onAnswerChange(question.id, [selectedId]);
-//console.log(matchingCorrectOption)
-  // ✅ Keep user-visible value for internal state and display
-  setConfirmedValue(finalValue);
-} else {
-  onAnswerChange(question.id, []);
-  setConfirmedValue('');
-}
-
+      const selectedId = matchingCorrectOption?.id ?? finalValue;
+      
+      // Send ID to parent for evaluation logic
+      onAnswerChange(question.id, [selectedId]);
+      
+      // Keep user-visible value for internal state and display
+      setConfirmedValue(finalValue);
+    } else {
+      onAnswerChange(question.id, []);
+      setConfirmedValue('');
+    }
   };
 
   const getDisplayValue = () => {
@@ -89,7 +105,7 @@ const IntegerQuestion: React.FC<IntegerQuestionProps> = ({
   };
 
   const hasChanges = () => {
-    const currentInput = getCurrentInputValue();//console.log(currentInput,confirmedValue)
+    const currentInput = getCurrentInputValue();
     return currentInput !== confirmedValue;
   };
 
@@ -111,7 +127,9 @@ const IntegerQuestion: React.FC<IntegerQuestionProps> = ({
   return (
     <div className="space-y-6 text-black">
       <div className="text-lg font-medium mb-4">
-        {question.questionText}
+        <ReactMarkdown rehypePlugins={[rehypeRaw]}>
+          {question.questionText}
+        </ReactMarkdown>
       </div>
 
       {question.image && (

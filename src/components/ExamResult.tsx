@@ -16,88 +16,91 @@ const ExamResult: React.FC<ExamResultProps> = ({ examData, slug }) => {
   
   // Calculate total score
   const calculateScore = () => {
-  let score = 0;
-  let totalMarks = 0;
+    let totalScore = 0;
+    let totalMarks = 0;
 
-  const sectionScores = examData.exam.sections.map(section => {
-    let sectionScore = 0;
-    let sectionTotal = 0;
+    const sectionScores = examData.exam.sections.map(section => {
+      let sectionScore = 0;
+      let sectionTotal = 0;
 
-    section.questions.forEach(question => {
-      const userAnswer = examData.answers[question.id];
-      const correctOptions = question.options.filter(opt => opt.isCorrect).map(opt => opt.id);
+      section.questions.forEach(question => {
+        const userAnswer = examData.answers[question.id];
+        const selected = userAnswer?.selectedOptionIds || [];
+        const correctOptions = question.options.filter(opt => opt.isCorrect).map(opt => opt.id);
 
-      const selected = userAnswer?.selectedOptionIds || [];
+        const isCorrect =
+          selected.length > 0 &&
+          selected.length === correctOptions.length &&
+          selected.every(id => correctOptions.includes(id));
 
-      const isCorrect =
-        selected.length > 0 &&
-        selected.length === correctOptions.length &&
-        selected.every(id => correctOptions.includes(id));
+        switch (question.questionType) {
+          case 'single 1':
+            sectionTotal += 1;
+            if (selected.length > 0) sectionScore += isCorrect ? 1 : -0.25;
+            break;
 
-      switch (question.questionType) {
-        case 'single 1':
-          sectionTotal += 1;
-          if (selected.length > 0) sectionScore += isCorrect ? 1 : -0.25;
-          break;
+          case 'single 2':
+            sectionTotal += 2;
+            if (selected.length > 0) sectionScore += isCorrect ? 2 : -0.5;
+            break;
 
-        case 'single 2':
-          sectionTotal += 2;
-          if (selected.length > 0) sectionScore += isCorrect ? 2 : -0.5;
-          break;
+          case 'single 4':
+            sectionTotal += 4;
+            if (selected.length > 0) sectionScore += isCorrect ? 4 : -1;
+            break;
 
-        case 'single 4':
-          sectionTotal += 4;
-          if (selected.length > 0) sectionScore += isCorrect ? 4 : -1;
-          break;
+          case 'multi':
+            sectionTotal += 2;
+            if (selected.length > 0) {
+              const correctSet = new Set(correctOptions);
+              const hasIncorrect = selected.some(id => !correctSet.has(id));
+              const correctSelected = selected.filter(id => correctSet.has(id)).length;
+              const totalCorrect = correctOptions.length;
 
-        case 'multi':
-          sectionTotal += 2;
-          if (selected.length > 0) {
-            const correctSet = new Set(correctOptions);
-            const hasIncorrect = selected.some(id => !correctSet.has(id));
-            const correctSelected = selected.filter(id => correctSet.has(id)).length;
-            const totalCorrect = correctOptions.length;
-
-            if (hasIncorrect) {
-              sectionScore += 0;
-            } else if (correctSelected === totalCorrect) {
-              sectionScore += 2;
-            } else if (correctSelected > 0) {
-              sectionScore += (2 * correctSelected) / totalCorrect;
+              if (hasIncorrect) {
+                sectionScore += 0;
+              } else if (correctSelected === totalCorrect) {
+                sectionScore += 2;
+              } else if (correctSelected > 0) {
+                sectionScore += (2 * correctSelected) / totalCorrect;
+              }
             }
-          }
-          break;
+            break;
 
-        case 'integer':
-          sectionTotal += 4;
-          if (isCorrect) {
-            sectionScore += 4;
-          } else {
-            sectionScore -= 1;
-          }
-          break;
-      }
+          case 'integer':
+            sectionTotal += 4;
+            if (selected.length > 0) {
+              sectionScore += isCorrect ? 4 : -1;
+            }
+            // unattempted → no penalty
+            break;
+
+          default:
+            console.warn(`Unknown question type: ${question.questionType}`);
+            break;
+        }
+      });
+
+      // Ensure non-negative section score
+      const finalSectionScore = Math.max(0, sectionScore);
+
+      totalScore += finalSectionScore;
+      totalMarks += sectionTotal;
+
+      return {
+        subject: section.subject,
+        score: finalSectionScore,
+        total: sectionTotal,
+        percentage: sectionTotal > 0 ? Math.round((finalSectionScore / sectionTotal) * 100) : 0
+      };
     });
 
-    // Accumulate total score and marks
-    score += sectionScore;
-    totalMarks += sectionTotal;
-
     return {
-      subject: section.subject,
-      score: Math.max(0, sectionScore),
-      total: sectionTotal,
-      percentage: sectionTotal > 0 ? Math.round((Math.max(0, sectionScore) / sectionTotal) * 100) : 0
+      score: Math.max(0, totalScore),
+      totalMarks,
+      sectionScores
     };
-  });
-
-  return {
-    score: Math.max(0, score),
-    totalMarks,
-    sectionScores
   };
-};
-
   
   const result = calculateScore();
 
