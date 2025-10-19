@@ -266,7 +266,6 @@ type Subject = 'physics' | 'chemistry' | 'maths';
               const selected = userAnswer.selectedOptionIds;
               const correctSet = new Set(correctOptions);
               const selectedSet = new Set(selected);
-        
               const hasIncorrect = selected.some(id => !correctSet.has(id));
               const correctSelected = selected.filter(id => correctSet.has(id)).length;
               const totalCorrect = correctOptions.length;
@@ -290,8 +289,18 @@ type Subject = 'physics' | 'chemistry' | 'maths';
             totalMarks += 4;
             subjectScores[subjectKey].total += 4;
 
-            if (userAnswer && userAnswer.selectedOptionIds.length > 0) {
-              if (isCorrect) {
+            const selected = userAnswer?.selectedOptionIds || [];
+            const correctOptionsInt = question.options
+              .filter(opt => opt.isCorrect)
+              .map(opt => opt.id);
+
+            const integerIsCorrect =
+              selected.length > 0 &&
+              selected.length === correctOptionsInt.length &&
+              selected.every(id => correctOptionsInt.includes(id));
+
+            if (selected.length > 0) {
+              if (integerIsCorrect) {
                 score += 4;
                 subjectScores[subjectKey].score += 4;
               } else {
@@ -299,10 +308,7 @@ type Subject = 'physics' | 'chemistry' | 'maths';
                 subjectScores[subjectKey].score -= 1;
               }
             }
-            // else: unattempted → no penalty
             break;
-
-        
           default:
             console.warn(`Unknown question type: ${question.questionType}`);
             break;
