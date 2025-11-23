@@ -82,8 +82,8 @@ const ExamResult: React.FC<ExamResultProps> = ({ examData, slug }) => {
       });
 
       // Ensure non-negative section score
-      const finalSectionScore = Math.max(0, sectionScore);
-
+      // const finalSectionScore = Math.max(0, sectionScore);
+      const finalSectionScore = sectionScore
       totalScore += finalSectionScore;
       totalMarks += sectionTotal;
 
