@@ -12,16 +12,17 @@ export default function Home() {
     const fetchData = async () => {
       try {
         const examQuery = stringify(
-          {
-            where: {
-              _status: {
-                equals: 'published',
-              },
-            },
+  {
+        where: {
+          _status: {
+            equals: 'published',
           },
-          { addQueryPrefix: true }
-        );
-  
+        },
+        limit: 100,
+      },
+      { addQueryPrefix: true }
+    );
+
         const [examsRes, attemptsRes] = await Promise.all([
           fetch(`/api/exams${examQuery}`, {
             credentials: 'include',
@@ -45,7 +46,7 @@ export default function Home() {
 
     fetchData();
   }, []);
-
+  
   if (loading) return <div className="p-6 text-center">Loading exams...</div>;
 
   return (
