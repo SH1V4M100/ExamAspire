@@ -1,4 +1,3 @@
-import type { TextField } from '@payloadcms/plugin-form-builder/types'
 import type { FieldErrorsImpl, FieldValues, UseFormRegister } from 'react-hook-form'
 
 import { Input } from '@/components/ui/input'
@@ -7,6 +6,14 @@ import React from 'react'
 
 import { Error } from '../Error'
 import { Width } from '../Width'
+type TextField = {
+  name: string
+  label?: string
+  defaultValue?: string
+  required?: boolean
+  width?: number | string
+  blockType?: string
+}
 
 export const Text: React.FC<
   TextField & {
