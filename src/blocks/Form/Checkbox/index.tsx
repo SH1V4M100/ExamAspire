@@ -1,4 +1,3 @@
-import type { CheckboxField } from '@payloadcms/plugin-form-builder/types'
 import type { FieldErrorsImpl, FieldValues, UseFormRegister } from 'react-hook-form'
 
 import { useFormContext } from 'react-hook-form'
@@ -9,6 +8,14 @@ import React from 'react'
 
 import { Error } from '../Error'
 import { Width } from '../Width'
+type CheckboxField = {
+  name: string
+  label?: string
+  defaultValue?: boolean
+  required?: boolean
+  width?: number | string
+  blockType?: string
+}
 
 export const Checkbox: React.FC<
   CheckboxField & {
@@ -26,7 +33,7 @@ export const Checkbox: React.FC<
           defaultChecked={defaultValue}
           id={name}
           {...props}
-          onCheckedChange={(checked) => {
+          onCheckedChange={(checked: boolean) => {
             setValue(props.name, checked)
           }}
         />
