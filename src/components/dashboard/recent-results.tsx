@@ -88,7 +88,7 @@ export function RecentResults() {
                     <div className="flex flex-col items-end">
                       <div className="flex items-center space-x-1">
                         <span className="text-sm font-medium">
-                          {result.score}/{result.totalMarks}
+                          {result.score.toFixed(2)}/{result.totalMarks}
                         </span>
                         <div
                           className={`h-2 w-2 rounded-full ${getScoreColor(
