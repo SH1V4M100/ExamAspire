@@ -47,7 +47,7 @@ export const Select: React.FC<
           const controlledValue = options.find((t) => t.value === value)
 
           return (
-            <SelectComponent onValueChange={(val: string | number) => onChange(val)} value={controlledValue?.value}>
+            <SelectComponent onValueChange={(val: string | number) => onChange(val.toString())} value={controlledValue?.value.toString()}>
               <SelectTrigger className="w-full" id={name}>
                 <SelectValue placeholder={label} />
               </SelectTrigger>
