@@ -52,14 +52,14 @@ export const Select: React.FC<
                 <SelectValue placeholder={label} />
               </SelectTrigger>
               <SelectContent>
-                {options.map(({ label, value }) => {
-                  return (
-                    <SelectItem key={value} value={value}>
-                      {label}
-                    </SelectItem>
-                  )
-                })}
-              </SelectContent>
+              {options.map(({ label, value }) => {
+                return (
+                  <SelectItem key={value.toString()} value={value.toString()}>
+                    {label}
+                  </SelectItem>
+                )
+              })}
+            </SelectContent>
             </SelectComponent>
           )
         }}
